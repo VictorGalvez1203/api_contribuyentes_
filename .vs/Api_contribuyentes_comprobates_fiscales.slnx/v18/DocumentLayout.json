@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\vgalvez\\source\\repos\\Api_contribuyentes_comprobates_fiscales\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0B0EB52A-4120-04CA-D851-CB2EF5914820}|Aplication\\Application.csproj|c:\\users\\vgalvez\\source\\repos\\api_contribuyentes_comprobates_fiscales\\aplication\\behaviours\\validationbehavior.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0B0EB52A-4120-04CA-D851-CB2EF5914820}|Aplication\\Application.csproj|solutionrelative:aplication\\behaviours\\validationbehavior.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0265BF54-A83F-D408-908B-E99BF2F519F8}|Web_Api\\Web_Api.csproj|c:\\users\\vgalvez\\source\\repos\\api_contribuyentes_comprobates_fiscales\\web_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0265BF54-A83F-D408-908B-E99BF2F519F8}|Web_Api\\Web_Api.csproj|solutionrelative:web_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0B0EB52A-4120-04CA-D851-CB2EF5914820}|Aplication\\Application.csproj|c:\\users\\vgalvez\\source\\repos\\api_contribuyentes_comprobates_fiscales\\aplication\\serviceextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0B0EB52A-4120-04CA-D851-CB2EF5914820}|Aplication\\Application.csproj|solutionrelative:aplication\\serviceextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ValidationBehavior.cs",
+              "DocumentMoniker": "C:\\Users\\vgalvez\\source\\repos\\Api_contribuyentes_comprobates_fiscales\\Aplication\\Behaviours\\ValidationBehavior.cs",
+              "RelativeDocumentMoniker": "Aplication\\Behaviours\\ValidationBehavior.cs",
+              "ToolTip": "C:\\Users\\vgalvez\\source\\repos\\Api_contribuyentes_comprobates_fiscales\\Aplication\\Behaviours\\ValidationBehavior.cs",
+              "RelativeToolTip": "Aplication\\Behaviours\\ValidationBehavior.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-27T14:43:56.351Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\vgalvez\\source\\repos\\Api_contribuyentes_comprobates_fiscales\\Web_Api\\Program.cs",
+              "RelativeDocumentMoniker": "Web_Api\\Program.cs",
+              "ToolTip": "C:\\Users\\vgalvez\\source\\repos\\Api_contribuyentes_comprobates_fiscales\\Web_Api\\Program.cs",
+              "RelativeToolTip": "Web_Api\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-27T14:36:37.578Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ServiceExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\vgalvez\\source\\repos\\Api_contribuyentes_comprobates_fiscales\\Aplication\\ServiceExtensions.cs",
+              "RelativeDocumentMoniker": "Aplication\\ServiceExtensions.cs",
+              "ToolTip": "C:\\Users\\vgalvez\\source\\repos\\Api_contribuyentes_comprobates_fiscales\\Aplication\\ServiceExtensions.cs",
+              "RelativeToolTip": "Aplication\\ServiceExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-27T14:23:51.052Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
