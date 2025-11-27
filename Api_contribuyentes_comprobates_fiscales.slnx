@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/SRC/" />
+  <Folder Name="/SRC/Core/">
+    <Project Path="Aplication/Application.csproj" />
+    <Project Path="Domain/Domain.csproj" />
+  </Folder>
+  <Folder Name="/SRC/Infraestructure/">
+    <Project Path="Persistence/Persistence.csproj" />
+    <Project Path="Shared/Shared.csproj" />
+  </Folder>
+  <Folder Name="/SRC/Presentation/">
+    <Project Path="Web_Api/Web_Api.csproj" />
+  </Folder>
+</Solution>
