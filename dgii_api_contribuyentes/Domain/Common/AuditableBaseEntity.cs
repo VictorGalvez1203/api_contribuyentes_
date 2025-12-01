@@ -1,6 +1,7 @@
 ﻿
 namespace Domain.Common
 {
+    //Estos son los atributos basicos que deben de tener todas las entidades, principales. Dichas van en la carpeta Entities
     public abstract class AuditableBaseEntity
     {
         public virtual int Id { get; set; }

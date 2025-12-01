@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ardalis.Specification" Version="5.1.0" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="FluentValidation" Version="12.1.0" />
@@ -16,10 +17,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\" />
-    <Folder Include="Feautres\Contribuyentes\Commands\DeleteContribuyenteCommand\" />
-    <Folder Include="Feautres\Contribuyentes\Commands\UpdateContribuyenteCommand\" />
-    <Folder Include="Feautres\Contribuyentes\Queries\GetAllContribuyente\" />
-    <Folder Include="Feautres\Contribuyentes\Queries\GetContribuyenteById\" />
     <Folder Include="Filters\" />
     <Folder Include="Mappings\" />
   </ItemGroup>

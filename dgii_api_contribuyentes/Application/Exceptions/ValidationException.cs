@@ -1,12 +1,8 @@
 ﻿using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Exceptions
 {
+    //Esta clase trabaja con lo realizado en la clase ValidationBehavior en la carpeta Behaviours.
     public class ValidationException : Exception
     {
         public ValidationException() : base("Se han producido uno o más errores de validación")
