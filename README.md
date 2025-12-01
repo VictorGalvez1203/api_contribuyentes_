@@ -49,6 +49,22 @@ VALUES
 ('98754321012', 'JUAN PEREZ', (SELECT id_tipo FROM tipos_contribuyente WHERE tipo = 'PERSONA FISICA'), 'activo'),
 ('000987456789', 'FARMACIA TU SALUD', (SELECT id_tipo FROM tipos_contribuyente WHERE tipo = 'PERSONA JURÍDICA'), 'inactivo');
 
+CREATE TABLE roles_usuario (
+    id_rol INT IDENTITY PRIMARY KEY,
+    nombre_rol VARCHAR(20) NOT NULL UNIQUE -- 'BASICO' | 'ADMIN'
+);
+
+
+CREATE TABLE usuarios (
+    id_usuario INT IDENTITY PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARBINARY(256) NOT NULL, -- recomendado almacenar hash, no texto
+    email VARCHAR(150) NULL UNIQUE,
+    id_rol INT NOT NULL REFERENCES roles_usuario(id_rol),
+    estado VARCHAR(10) NOT NULL DEFAULT 'activo' CHECK (estado IN ('activo','inactivo')),
+    fecha_creacion DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
+);
+
 -- Comprobantes (corregí nombres/valores confusos del JSON)
 -- Primer comprobante (tercer objeto del JSON)
 INSERT INTO comprobantes_fiscales (id_contribuyente, ncf, monto, descripcion)
@@ -68,6 +84,20 @@ VALUES (
     'Comprobante ejemplo 2'
 );
 
+INSERT INTO roles_usuario (nombre_rol)
+VALUES ('BASICO'), ('ADMIN');
+
+
+INSERT INTO usuarios (username, password_hash, email, id_rol)
+VALUES (
+    'admin01',
+    HASHBYTES('SHA2_256', 'MiPasswordSeguro123'), -- ejemplo
+    'admin@dgii.gob.do',
+    (SELECT id_rol FROM roles_usuario WHERE nombre_rol = 'ADMIN')
+);
+
 -- Verifica resultados:
 SELECT * FROM contribuyentes;
 SELECT * FROM comprobantes_fiscales;
+SELECT * FROM roles_usuario;
+SELECT * FROM usuarios
