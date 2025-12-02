@@ -9,11 +9,15 @@ namespace Domain.Entities
         public string Name { get; set; }
         public string Lastname { get; set; }
         public string RncCedula { get; set; }
-        public string Type { get; set; }
+        public int TipoContribuyenteId { get; set; }
+        public tipos_contribuyente TipoContribuyente { get; set; }
+
         public string Status { get; set; }
         public string Numberphone { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
 
+        //Navegación hacia los comprobantes fiscales
+        public ICollection<Comprobantes_fiscales> Comprobantes { get; set; }
     }
 }

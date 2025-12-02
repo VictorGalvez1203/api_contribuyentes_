@@ -6,10 +6,27 @@ namespace Domain.Entities
     public class Comprobantes_fiscales : AuditableBaseEntity
     {
         public int ContribuyenteId { get; set; }
+        public Contribuyente Contribuyente { get; set; }
         public string Ncf {  get; set; }
         public DateTime FechaEmision {  get; set; }
-        public decimal Monto { get; set; }
-        public decimal Itbis18 { get; set; }
-        public string Descripcion { get; set; }
+
+        private decimal _monto;
+        public decimal Monto 
+        {
+            get => _monto;
+            set
+            { 
+                _monto = value;
+                Itbis18 = CalcularItbis(_monto);
+            }
+        }
+        public decimal Itbis18 { get; private set; }
+        public string? Descripcion { get; set; }
+
+
+        private decimal CalcularItbis(decimal monto)
+        {
+            return Math.Round(monto * 0.18m, 2); // 18% con 2 decimales
+        }
     }
 }

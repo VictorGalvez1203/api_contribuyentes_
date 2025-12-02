@@ -10,6 +10,7 @@ namespace Domain.Entities
         public byte[] Password_Hash { get; set; }
         public string Email { get; set; }
         public int Rol_Id { get; set; }
+        public roles_usuario Rol { get; set; }
         public string Estado {  get; set; }
 
     }
