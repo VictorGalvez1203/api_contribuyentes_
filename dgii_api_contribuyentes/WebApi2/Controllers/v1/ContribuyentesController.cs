@@ -1,5 +1,5 @@
-﻿using Application.Feautres.Comprobantes_fiscales.Commands;
-using Application.Feautres.Contribuyentes.Commands;
+﻿using Application.Features.Comprobantes_fiscales.Commands;
+using Application.Features.Contribuyentes.Commands;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 

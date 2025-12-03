@@ -1,4 +1,4 @@
-﻿using Application.Feautres.Comprobantes_fiscales.Commands;
+﻿using Application.Features.Comprobantes_fiscales.Commands;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 
