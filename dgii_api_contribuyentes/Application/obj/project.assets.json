@@ -194,6 +194,16 @@
         "runtime": {
           "lib/netcoreapp2.0/_._": {}
         }
+      },
+      "Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Domain.dll": {}
+        }
       }
     }
   },
@@ -506,6 +516,11 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "Domain/1.0.0": {
+      "type": "project",
+      "path": "../Domain/Domain.csproj",
+      "msbuildProject": "../Domain/Domain.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -513,29 +528,30 @@
       "Ardalis.Specification >= 5.1.0",
       "AutoMapper >= 10.1.1",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 8.1.1",
+      "Domain >= 1.0.0",
       "FluentValidation >= 12.1.0",
       "FluentValidation.DependencyInjectionExtensions >= 12.1.0",
       "MediatR.Extensions.Microsoft.DependencyInjection >= 9.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\eugam\\.nuget\\packages\\": {},
+    "C:\\Users\\vgalvez\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\eugam\\source\\repos\\VictorGalvez03\\dgii_api_contribuyentes\\dgii_api_contribuyentes\\Application\\Application.csproj",
+      "projectUniqueName": "C:\\Users\\vgalvez\\source\\repos\\dgii_api_contribuyentes\\dgii_api_contribuyentes\\Application\\Application.csproj",
       "projectName": "Application",
-      "projectPath": "C:\\Users\\eugam\\source\\repos\\VictorGalvez03\\dgii_api_contribuyentes\\dgii_api_contribuyentes\\Application\\Application.csproj",
-      "packagesPath": "C:\\Users\\eugam\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\eugam\\source\\repos\\VictorGalvez03\\dgii_api_contribuyentes\\dgii_api_contribuyentes\\Application\\obj\\",
+      "projectPath": "C:\\Users\\vgalvez\\source\\repos\\dgii_api_contribuyentes\\dgii_api_contribuyentes\\Application\\Application.csproj",
+      "packagesPath": "C:\\Users\\vgalvez\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\vgalvez\\source\\repos\\dgii_api_contribuyentes\\dgii_api_contribuyentes\\Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\eugam\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\vgalvez\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -544,13 +560,16 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\vgalvez\\source\\repos\\dgii_api_contribuyentes\\dgii_api_contribuyentes\\Domain\\Domain.csproj": {
+              "projectPath": "C:\\Users\\vgalvez\\source\\repos\\dgii_api_contribuyentes\\dgii_api_contribuyentes\\Domain\\Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

@@ -6,8 +6,8 @@ namespace Domain.Entities
     public class Comprobantes_fiscales : AuditableBaseEntity
     {
         public int ContribuyenteId { get; set; }
-        public Contribuyente Contribuyente { get; set; }
-        public string Ncf {  get; set; }
+        public Contribuyente? Contribuyente { get; set; }
+        public string? Ncf {  get; set; }
         public DateTime FechaEmision {  get; set; }
 
         private decimal _monto;

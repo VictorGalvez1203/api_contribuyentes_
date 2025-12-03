@@ -17,24 +17,32 @@ namespace Persistence.Configuration
                 .IsRequired();
 
             builder.Property(p => p.Lastname)
-                .HasMaxLength(100);
+                .HasMaxLength(100)
+                .IsRequired();
 
             builder.Property(p => p.RncCedula)
                 .HasMaxLength(20)
                 .IsRequired();
+            builder.HasIndex(p => p.RncCedula)
+                .IsUnique();
 
             builder.Property(p => p.Status)
                 .HasMaxLength(20)
                 .IsRequired();
 
             builder.Property(p => p.Numberphone)
-                .HasMaxLength(30);
+                .HasMaxLength(30)
+                .IsRequired();
 
             builder.Property(p => p.Email)
-                .HasMaxLength(150);
+                .HasMaxLength(150)
+                .IsRequired(); ;
+            builder.HasIndex(p => p.Email)
+                .IsUnique();
 
             builder.Property(p => p.Address)
-                .HasMaxLength(250);
+                .HasMaxLength(250)
+                .IsRequired();
 
             // RELACIÓN CON tipos_contribuyente
             builder.HasOne(c => c.TipoContribuyente)
