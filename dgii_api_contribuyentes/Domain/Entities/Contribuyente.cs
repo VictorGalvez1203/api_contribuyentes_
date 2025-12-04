@@ -6,8 +6,8 @@ namespace Domain.Entities
     //Esta clase se usara en la carpeta Feautres, para la carpeta que tiene el mismo nombre, para las capertas Commands y Queries. 
     public class Contribuyente : AuditableBaseEntity
     {
-        public string? Name { get; set; }
-        public string? Lastname { get; set; }
+        public string? FistName { get; set; }
+        public string? LastName { get; set; }
         public string? RncCedula { get; set; }
         public int TipoContribuyenteId { get; set; }
         public tipos_contribuyente? TipoContribuyente { get; set; }

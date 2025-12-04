@@ -11,7 +11,7 @@ namespace Application.Mappings
         public GeneralProfile()
         {
             #region Commands
-            CreateMap<CreateComprobante_fiscalesCommand, Comprobantes_fiscales>();
+            //CreateMap<CreateComprobante_fiscalesCommand, Comprobantes_fiscales>();
             CreateMap<CreateContribuyenteCommand, Contribuyente>();
             #endregion
         }

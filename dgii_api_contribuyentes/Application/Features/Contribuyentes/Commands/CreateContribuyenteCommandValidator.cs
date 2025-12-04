@@ -34,7 +34,7 @@ namespace Application.Features.Contribuyentes.Commands
                 .WithMessage("{PropertyName} debe ser 'Activo' o 'Inactivo'.");
 
             // Teléfono → formato: 000-000-0000
-            RuleFor(p => p.Telefono)
+            RuleFor(p => p.Numberphone)
                 .NotEmpty().WithMessage("{PropertyName} no puede estar vacío.")
                 .Matches(@"^\d{3}-\d{3}-\d{4}$")
                 .WithMessage("{PropertyName} debe tener el formato 000-000-0000.");

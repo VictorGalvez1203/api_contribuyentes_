@@ -6,14 +6,14 @@ using AutoMapper;
 
 namespace Application.Features.Contribuyentes.Commands
 {
-    public class CreateContribuyenteCommand : IRequest<Wrappers.Response<int>>
+    public class CreateContribuyenteCommand : IRequest<Response<int>>
     {
         public string? FistName { get; set; }
         public string? LastName { get; set; }
         public string? RncCedula { get; set; }
         public int TipoContribuyenteId { get; set; }
         public string? Status { get; set; }
-        public string? Telefono { get; set; }
+        public string? Numberphone { get; set; }
         public string? Email { get; set; }
         public string? Address { get; set; }
     }

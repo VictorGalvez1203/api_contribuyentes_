@@ -12,11 +12,11 @@ namespace Persistence.Configuration
 
             builder.HasKey(p => p.Id);
 
-            builder.Property(p => p.Name)
+            builder.Property(p => p.FistName)
                 .HasMaxLength(100)
                 .IsRequired();
 
-            builder.Property(p => p.Lastname)
+            builder.Property(p => p.LastName)
                 .HasMaxLength(100)
                 .IsRequired();
 
