@@ -1,5 +1,4 @@
-﻿
-using Application.Features.Comprobantes_fiscales.Commands;
+﻿using Application.Features.Comprobantes_fiscales.Commands;
 using Application.Features.Contribuyentes.Commands;
 using AutoMapper;
 using Domain.Entities;
@@ -11,7 +10,7 @@ namespace Application.Mappings
         public GeneralProfile()
         {
             #region Commands
-            //CreateMap<CreateComprobante_fiscalesCommand, Comprobantes_fiscales>();
+            CreateMap<CreateComprobante_fiscalesCommand, Comprobantes_fiscales>();
             CreateMap<CreateContribuyenteCommand, Contribuyente>();
             #endregion
         }

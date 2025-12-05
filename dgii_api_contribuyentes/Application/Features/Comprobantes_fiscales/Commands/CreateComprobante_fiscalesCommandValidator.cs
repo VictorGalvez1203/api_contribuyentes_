@@ -6,16 +6,15 @@ namespace Application.Features.Comprobantes_fiscales.Commands
     {
         public CreateComprobante_fiscalesCommandValidator()
         {
+            // ID del Contribuyente
+            RuleFor(p => p.ContribuyenteId)
+                .GreaterThan(0).WithMessage("{PropertyName} debe ser mayor que 0.")
+                .NotEmpty().WithMessage("{PropertyName} no puede ser vacío.");
+
             // NCF
             RuleFor(p => p.Ncf)
                 .NotEmpty().WithMessage("{PropertyName} no puede ser vacío.")
                 .Length(1, 13).WithMessage("{PropertyName} no debe exceder de {MaxLength} caracteres.");
-
-            // Fecha de emisión
-            RuleFor(p => p.Fecha_Emision)
-                .NotEmpty().WithMessage("Fecha de nacimiento no puede ser vacío.")
-                .LessThanOrEqualTo(DateTime.Now)
-                .WithMessage("{PropertyName} no puede ser una fecha futura.");
 
             // Monto
             RuleFor(p => p.Monto)

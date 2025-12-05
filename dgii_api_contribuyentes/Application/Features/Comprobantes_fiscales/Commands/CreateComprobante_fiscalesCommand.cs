@@ -8,8 +8,8 @@ namespace Application.Features.Comprobantes_fiscales.Commands
 {
     public class CreateComprobante_fiscalesCommand : IRequest<Wrappers.Response<int>>
     {
+        public int ContribuyenteId { get; set; }
         public string? Ncf { get; set; }
-        public DateTime Fecha_Emision { get; set; }
         public decimal Monto { get; set; }
         public string? Descripcion { get; set; }
     }
@@ -29,6 +29,7 @@ namespace Application.Features.Comprobantes_fiscales.Commands
         {
             
             var nuevoRegistro = _mapper.Map<Domain.Entities.Comprobantes_fiscales>(request);
+            nuevoRegistro.FechaEmision = DateTime.Now;
             var data = await _repositoryAsync.AddAsync(nuevoRegistro);
 
             return new Response<int>(data.Id);
