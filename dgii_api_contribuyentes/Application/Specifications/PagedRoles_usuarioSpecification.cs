@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Usuarios.Queries
+namespace Application.Specifications
 {
-    internal class GetAllUsuarios
+    internal class PagedRoles_usuarioSpecification
     {
     }
 }

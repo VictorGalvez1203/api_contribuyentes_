@@ -1,5 +1,4 @@
-﻿
-using Ardalis.Specification;
+﻿using Ardalis.Specification;
 using Domain.Entities;
 
 namespace Application.Specifications

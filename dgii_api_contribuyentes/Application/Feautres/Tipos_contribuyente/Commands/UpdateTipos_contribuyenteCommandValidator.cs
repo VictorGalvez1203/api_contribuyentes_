@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Roles_usuario.Queries
+namespace Application.Feautres.Tipos_contribuyente.Commands
 {
-    internal class GetRoles_usuarioById
+    internal class UpdateTipos_contribuyenteCommandValidator
     {
     }
 }

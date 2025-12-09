@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Tipos_contribuyente.Queries
 {
-    internal class GetTipos_contribuyenteById
+    internal class GetTipos_contribuyenteByIdQuery
     {
     }
 }

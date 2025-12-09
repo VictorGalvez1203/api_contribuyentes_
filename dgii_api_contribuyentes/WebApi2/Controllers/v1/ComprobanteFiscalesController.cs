@@ -18,7 +18,7 @@ namespace WebApi2.Controllers.v1
 
         //Get: api/<controllers>/
         [HttpGet()]
-        public async Task<IActionResult> Get([FromQuery] GetAllComprobanteFiscalByIdParameters filter)
+        public async Task<IActionResult> Get([FromQuery] GetAllComprobanteFiscalParameters filter)
         {
             return Ok(await Mediator.Send(new GetAllComprobantes_fiscalesQuery 
             {

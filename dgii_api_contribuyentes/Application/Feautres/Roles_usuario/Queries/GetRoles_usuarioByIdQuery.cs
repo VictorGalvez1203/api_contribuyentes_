@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Tipos_contribuyente.Queries
+namespace Application.Features.Roles_usuario.Queries
 {
-    internal class GetAllTipos_contribuyente
+    internal class GetRoles_usuarioByIdQuery
     {
     }
 }

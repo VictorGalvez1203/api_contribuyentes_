@@ -7,8 +7,8 @@ namespace Domain.Entities
 
     public class roles_usuario : AuditableBaseEntity
     {
-        public string NombreRol {  get; set; }
+        public string? NombreRol {  get; set; }
 
-        public ICollection<usuarios> Usuarios { get; set; }
+        public ICollection<usuarios>? Usuarios { get; set; }
     }
 }

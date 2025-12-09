@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Usuarios.Queries
 {
-    internal class GetUsuariosById
+    internal class GetAllUsuariosQuery
     {
     }
 }

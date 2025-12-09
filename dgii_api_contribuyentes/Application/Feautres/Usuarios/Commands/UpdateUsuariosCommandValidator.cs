@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Contribuyentes.Queries
+namespace Application.Feautres.Usuarios.Commands
 {
-    internal class GetContribuyenteById
+    internal class UpdateUsuariosCommandValidator
     {
     }
 }
