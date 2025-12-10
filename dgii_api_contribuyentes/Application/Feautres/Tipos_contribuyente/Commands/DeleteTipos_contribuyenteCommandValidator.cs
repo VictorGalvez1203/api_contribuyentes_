@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Application.Features.Tipos_contribuyente.Commands;
+using FluentValidation;
 
 namespace Application.Feautres.Tipos_contribuyente.Commands
 {
-    internal class DeleteTipos_contribuyenteCommandValidator
+    public class DeleteTipos_contribuyenteCommandValidator : AbstractValidator<DeleteTipos_contribuyenteCommand>
     {
+        public DeleteTipos_contribuyenteCommandValidator()
+        {
+            //ID del Rol Usuario
+            RuleFor(p => p.Id)
+                .GreaterThan(0).WithMessage("{PropertyName} debe ser mayor que 0.");
+        }
     }
 }

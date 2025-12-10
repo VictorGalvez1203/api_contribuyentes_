@@ -7,7 +7,7 @@ namespace Domain.Entities
 
     public class tipos_contribuyente : AuditableBaseEntity
     {
-        public string Tipo { get; set; }
+        public string? Tipo { get; set; }
 
         public ICollection<Contribuyente> Contribuyentes { get; set; }
     }

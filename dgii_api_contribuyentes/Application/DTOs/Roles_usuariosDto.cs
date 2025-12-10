@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Application.DTOs
 {
-    internal class Roles_usuariosDto
+    public class Roles_usuariosDto
     {
+        public int Id { get; set; }
+        public string? NombreRol { get; set; }
     }
 }

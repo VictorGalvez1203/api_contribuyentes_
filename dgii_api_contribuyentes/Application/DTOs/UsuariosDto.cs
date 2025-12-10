@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Entities;
 
 namespace Application.DTOs
 {
-    internal class UsuariosDto
+    public class UsuariosDto
     {
+        public int Id { get; set; }
+        public string? Username { get; set; }
+        public byte[]? Password_Hash { get; set; }
+        public string? Email { get; set; }
+        public int? Rol_Id { get; set; }
+        public string? Estado { get; set; }
     }
 }

@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ardalis.Specification;
+using Domain.Entities;
 
 namespace Application.Specifications
 {
-    internal class PagedRoles_usuarioSpecification
+    public class PagedRoles_usuarioSpecification : Specification<roles_usuario>
     {
+        public PagedRoles_usuarioSpecification(
+           int pageSize,
+           int pageNumber)
+        {
+            // Ordenar por Id
+            Query.OrderBy(r => r.Id);
+
+            // Paginación
+            Query.Skip((pageNumber - 1) * pageSize)
+                 .Take(pageSize);
+        }
     }
 }
