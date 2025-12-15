@@ -2,6 +2,7 @@
 using Application.Wrappers;
 using Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Features.Usuarios.Commands
 {
@@ -9,7 +10,7 @@ namespace Application.Features.Usuarios.Commands
     {
         public int Id { get; set; }
         public string? Username { get; set; }
-        public string? Password_Hash { get; set; }
+        public string? Password { get; set; }
         public string? Email { get; set; }
         public int? Rol_Id { get; set; }
         public string? Estado { get; set; }
@@ -18,9 +19,11 @@ namespace Application.Features.Usuarios.Commands
     public class UpdateUsuariosCommandHandler : IRequestHandler<UpdateUsuariosCommand, Response<int>>
     {
         private readonly IRepositoryAsync<usuarios> _repositoryAsync;
-        public UpdateUsuariosCommandHandler(IRepositoryAsync<usuarios> repositoryAsync)
+        private readonly IPasswordHasher<usuarios> _passwordHasher;
+        public UpdateUsuariosCommandHandler(IRepositoryAsync<usuarios> repositoryAsync, IPasswordHasher<usuarios> passwordHasher)
         {
             _repositoryAsync = repositoryAsync;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<Response<int>> Handle(UpdateUsuariosCommand request, CancellationToken cancellationToken)
@@ -35,7 +38,13 @@ namespace Application.Features.Usuarios.Commands
             {
                 usuarios.Id = request.Id;
                 usuarios.Username = request.Username;
-                usuarios.Password_Hash = request.Password_Hash;
+
+
+                if (!string.IsNullOrEmpty(request.Password))
+                {
+                    usuarios.Password_Hash = _passwordHasher.HashPassword(usuarios, request.Password);
+                }
+
                 usuarios.Email = request.Email;
                 usuarios.Rol_Id = request.Rol_Id;
                 usuarios.Estado = request.Estado;

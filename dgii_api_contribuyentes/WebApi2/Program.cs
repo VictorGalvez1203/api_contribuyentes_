@@ -1,4 +1,6 @@
 using Application;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Persistence;
 using Shared;
 using WebApi2.Extensions;
@@ -18,6 +20,7 @@ builder.Services.AddApplicationLayer();
 builder.Services.AddSharedInfraestructure(builder.Configuration);
 builder.Services.AddPersistencesInfraestructure(builder.Configuration);
 
+builder.Services.AddScoped<IPasswordHasher<usuarios>, PasswordHasher<usuarios>>();
 
 var app = builder.Build();
 

@@ -13,7 +13,7 @@ namespace Application.Feautres.Usuarios.Commands
                 .MaximumLength(100).WithMessage("{PropertyName} no debe exceder de {MaxLength} caracteres.");
 
             // Password_Hash
-            RuleFor(u => u.Password_Hash)
+            RuleFor(u => u.Password)
                 .NotEmpty().WithMessage("{PropertyName} no puede estar vacío.")
                 .MinimumLength(8).WithMessage("{PropertyName} debe tener al menos 8 caracteres.");
 
