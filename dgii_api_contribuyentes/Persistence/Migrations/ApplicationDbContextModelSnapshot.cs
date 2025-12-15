@@ -241,11 +241,11 @@ namespace Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<byte[]>("Password_Hash")
+                    b.Property<string>("Password_Hash")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Rol_Id")
+                    b.Property<int?>("Rol_Id")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
@@ -290,8 +290,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entities.roles_usuario", "Rol")
                         .WithMany("Usuarios")
                         .HasForeignKey("Rol_Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Rol");
                 });

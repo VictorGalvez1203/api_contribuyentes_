@@ -12,8 +12,8 @@ using Persistence.Contexts;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251204194056_MiPrimerMigration4")]
-    partial class MiPrimerMigration4
+    [Migration("20251215214245_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,11 +244,11 @@ namespace Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<byte[]>("Password_Hash")
+                    b.Property<string>("Password_Hash")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Rol_Id")
+                    b.Property<int?>("Rol_Id")
                         .HasColumnType("int");
 
                     b.Property<string>("Username")
@@ -293,8 +293,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entities.roles_usuario", "Rol")
                         .WithMany("Usuarios")
                         .HasForeignKey("Rol_Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Rol");
                 });

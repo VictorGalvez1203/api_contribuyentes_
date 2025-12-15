@@ -6,7 +6,7 @@ namespace Application.DTOs
     {
         public int Id { get; set; }
         public string? Username { get; set; }
-        public byte[]? Password_Hash { get; set; }
+        public string? Password_Hash { get; set; }
         public string? Email { get; set; }
         public int? Rol_Id { get; set; }
         public string? Estado { get; set; }

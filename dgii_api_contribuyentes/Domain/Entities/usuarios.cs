@@ -7,7 +7,7 @@ namespace Domain.Entities
     public class usuarios : AuditableBaseEntity
     {
         public string? Username { get; set; }
-        public byte[]? Password_Hash { get; set; }
+        public string? Password_Hash { get; set; }
         public string? Email { get; set; }
         public int? Rol_Id { get; set; }
         public roles_usuario? Rol { get; set; }

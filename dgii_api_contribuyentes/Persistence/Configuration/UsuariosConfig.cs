@@ -17,7 +17,7 @@ namespace Persistence.Configuration
                 .IsRequired();
 
             builder.Property(u => u.Password_Hash)
-                .HasColumnType("varbinary(max)") // equivalente a byte[] en SQL Server
+                .HasColumnType("nvarchar(max)")
                 .IsRequired();
 
             builder.Property(u => u.Email)

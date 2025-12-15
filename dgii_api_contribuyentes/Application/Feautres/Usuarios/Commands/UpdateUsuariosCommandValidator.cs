@@ -16,10 +16,10 @@ namespace Application.Feautres.Usuarios.Commands
                 .NotEmpty().WithMessage("{PropertyName} no puede estar vacío.")
                 .MaximumLength(100).WithMessage("{PropertyName} no debe exceder de {MaxLength} caracteres.");
 
-            // Password_Hash (debe venir como byte[] y obligatorio)
+            // Password_Hash
             RuleFor(u => u.Password_Hash)
                 .NotEmpty().WithMessage("{PropertyName} no puede estar vacío.")
-                .Must(p => p.Length > 0).WithMessage("{PropertyName} es obligatorio.");
+                .MinimumLength(8).WithMessage("{PropertyName} debe tener al menos 8 caracteres."); ;
 
             // Email
             RuleFor(u => u.Email)
