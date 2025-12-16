@@ -2,14 +2,17 @@
 using Application.Features.Comprobantes_fiscales.Queries;
 using Application.Feautres.Comprobantes_fiscales.Queries;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi2.Controllers.v1
 {
+    [Authorize]
     [ApiVersion("1.0")]
     public class ComprobanteFiscalesController : BaseApiController
     {
         //Get: api/<controllers>/5
+        [Authorize(Roles = "admin, basic")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -17,6 +20,7 @@ namespace WebApi2.Controllers.v1
         }
 
         //Get: api/<controllers>/
+        [Authorize(Roles = "admin, basic")]
         [HttpGet()]
         public async Task<IActionResult> Get([FromQuery] GetAllComprobanteFiscalParameters filter)
         {
@@ -29,8 +33,9 @@ namespace WebApi2.Controllers.v1
                 FechaEmision = filter.FechaEmision
             }));
         }
-        
+
         //Post: api/<controller>
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Post(CreateComprobante_fiscalesCommand command)
         {
@@ -38,6 +43,7 @@ namespace WebApi2.Controllers.v1
         }
 
         //Put: api/<controllers>/5
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, UpdateComprobante_fiscalesCommand command)
         {
@@ -52,6 +58,7 @@ namespace WebApi2.Controllers.v1
         }
 
         //Delete: api/<controllers>/5
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
