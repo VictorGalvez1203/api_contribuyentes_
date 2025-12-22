@@ -1,35 +1,40 @@
-﻿
-namespace Application.Wrappers
+﻿namespace Application.Wrappers
 {
-    // Esta clase sirve como un contenedor genérico para unificar las respuestas 
-    // de la aplicación. Permite retornar una estructura estándar que indica si la 
-    // operación fue exitosa (Succeeded), un mensaje descriptivo (Message), una lista 
-    // de errores (Error) y los datos resultantes (Data). 
-
-    //Se implementa en las clases que estan en la carpeta Feautres para la carpeta Commands
     public class Response<T>
     {
-        public Response() 
+        public Response()
         {
-             
+            Errors = new List<string>();
         }
 
+        // ✅ Caso OK
         public Response(T data, string message = null)
         {
             Succeeded = true;
             Message = message;
             Data = data;
+            Errors = new List<string>();
         }
 
+        // ❌ Error lógico (ej: correo duplicado)
         public Response(string message)
         {
             Succeeded = false;
             Message = message;
+            Errors = new List<string>();
+        }
+
+        // ❌ Error de validación (varios errores)
+        public Response(List<string> errors)
+        {
+            Succeeded = false;
+            Errors = errors;
         }
 
         public bool Succeeded { get; set; }
-        public  string Message { get; set; }
+        public string? Message { get; set; }
         public List<string> Errors { get; set; }
-        public T Data { get; set; }
+        public T? Data { get; set; }
     }
 }
+
