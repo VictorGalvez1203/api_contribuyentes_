@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Specifications;
 using Application.Wrappers;
 using AutoMapper;
 using Domain.Entities;
@@ -32,16 +33,32 @@ namespace Application.Features.Usuarios.Commands
 
         public async Task<Response<int>> Handle(CreateUsuariosCommand request, CancellationToken cancellationToken)
         {
-            var nuevoUsuario = _mapper.Map<usuarios>(request);
-
-            // Hashear la contraseña aquí
-            if (!string.IsNullOrEmpty(request.Password))
+            // 1️⃣ Validar email duplicado
+            if (!string.IsNullOrWhiteSpace(request.Email))
             {
-                nuevoUsuario.Password_Hash = _passwordHasher.HashPassword(nuevoUsuario, request.Password);
+                var spec = new GetUsuarioByEmailSpecification(request.Email);
+                var usuarios = await _repositoryAsync.ListAsync(spec, cancellationToken);
+
+                if (usuarios.Any())
+                {
+                    return new Response<int>("El correo ya está registrado.");
+                }
             }
 
-            var data = await _repositoryAsync.AddAsync(nuevoUsuario);
+            // 2️⃣ Crear entidad
+            var nuevoUsuario = _mapper.Map<usuarios>(request);
 
+            // 3️⃣ Hashear contraseña
+            if (!string.IsNullOrEmpty(request.Password))
+            {
+                nuevoUsuario.Password_Hash =
+                    _passwordHasher.HashPassword(nuevoUsuario, request.Password);
+            }
+
+            // 4️⃣ Guardar
+            var data = await _repositoryAsync.AddAsync(nuevoUsuario, cancellationToken);
+
+            // 5️⃣ OK
             return new Response<int>(data.Id);
         }
     }

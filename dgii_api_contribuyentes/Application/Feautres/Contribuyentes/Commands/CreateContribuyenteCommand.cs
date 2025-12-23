@@ -1,8 +1,9 @@
 ﻿using Application.Interfaces;
+using Application.Specifications;
 using Application.Wrappers;
-using MediatR;
-using Domain.Entities;
 using AutoMapper;
+using Domain.Entities;
+using MediatR;
 
 namespace Application.Features.Contribuyentes.Commands
 {
@@ -31,9 +32,25 @@ namespace Application.Features.Contribuyentes.Commands
 
         public async Task<Response<int>> Handle(CreateContribuyenteCommand request, CancellationToken cancellationToken)
         {
-            var nuevoRegistro = _mapper.Map<Contribuyente>(request);
-            var data = await _repositoryAsync.AddAsync(nuevoRegistro);
+            // 1️⃣ Validar RNC/Cédula duplicado
+            if (!string.IsNullOrWhiteSpace(request.RncCedula))
+            {
+                var spec = new GetContribuyenteByRncCedulaSpecification(request.RncCedula);
+                var existentes = await _repositoryAsync.ListAsync(spec, cancellationToken);
 
+                if (existentes.Any())
+                {
+                    return new Response<int>("El RNC/Cédula ya está registrado.");
+                }
+            }
+
+            // 2️⃣ Mapear entidad
+            var nuevoRegistro = _mapper.Map<Contribuyente>(request);
+
+            // 3️⃣ Guardar
+            var data = await _repositoryAsync.AddAsync(nuevoRegistro, cancellationToken);
+
+            // 4️⃣ OK
             return new Response<int>(data.Id);
         }
     }

@@ -42,7 +42,21 @@ namespace WebApi2.Controllers.v1
         [HttpPost]
         public async Task<IActionResult> Post(CreateContribuyenteCommand command)
         {
-            return Ok(await Mediator.Send(command));
+            var result = await Mediator.Send(command);
+
+            // ❌ Error lógico (ej: RNC duplicado)
+            if (!result.Succeeded)
+            {
+                if (!string.IsNullOrEmpty(result.Message))
+                {
+                    return Conflict(result); // 409
+                }
+
+                return BadRequest(result); // 400
+            }
+
+            // ✅ OK
+            return Ok(result);
         }
 
         //Put: api/<controllers>/5
