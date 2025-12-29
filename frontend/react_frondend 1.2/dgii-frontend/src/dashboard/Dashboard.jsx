@@ -10,6 +10,8 @@ export default function Dashboard() {
   const [panel, setPanel] = useState("contribuyentes");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  
+
   return (
     <div className="dashboard">
       <Sidebar
