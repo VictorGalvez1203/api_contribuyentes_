@@ -459,20 +459,72 @@ body {
 
 
 /* ============================================================
-   MÓDULO: COMPROBANTES
+   MÓDULO: COMPROBANTES (actualizado con todos los estilos inline)
 ============================================================ */
-#listaComprobantes .card {
+.filter-input {
+  flex: 1 1 150px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  height: 40px;
+  box-sizing: border-box;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+  background-color: white;
+}
+
+.autocomplete-wrapper .clear-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;   /* fondo transparente */
+  border: none;              /* quita borde */
+  outline: none;             /* quita el outline al hacer focus */
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #666;
+  padding: 0;
+  line-height: 1;
+}
+
+.autocomplete-wrapper .clear-btn:hover {
+  color: #dc2626;           /* opcional: cambia a rojo al pasar el mouse */
+}
+
+
+.listaComprobantes .card {
   max-width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: #fffbeb;
   border-left: 6px solid #f59e0b;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.85rem;
+  min-height: 85px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+  transition: background-color 0.2s ease;
+  cursor: pointer;
 }
 
-#listaComprobantes .card:hover {
-  background: #fef3c7;
+.listaComprobantes .card:hover {
+  background-color: #fef3c7;
 }
+
+.listaComprobantes .card div:first-child {
+  flex: 1 1 60%;
+}
+
+.listaComprobantes .card div:last-child {
+  flex: 1 1 35%;
+  text-align: right;
+}
+
 
 
 

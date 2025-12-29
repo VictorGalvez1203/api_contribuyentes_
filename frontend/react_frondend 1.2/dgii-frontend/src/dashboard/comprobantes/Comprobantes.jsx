@@ -12,20 +12,16 @@ import { getContribuyentes } from "../../api/contribuyentesApi";
 
 export default function Comprobantes() {
   const [data, setData] = useState([]);
-
   const [filters, setFilters] = useState({
     ncf: "",
     FechaEmision: "",
     ContribuyenteId: null,
   });
-
   const [searchContribuyente, setSearchContribuyente] = useState("");
   const [contribuyentes, setContribuyentes] = useState([]);
   const [seleccionadoContribuyente, setSeleccionadoContribuyente] = useState(null);
-
   const [seleccionado, setSeleccionado] = useState(null);
   const [modal, setModal] = useState({ open: false, modo: "editar" });
-
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -56,13 +52,7 @@ export default function Comprobantes() {
   }, [searchContribuyente]);
 
   async function cargar() {
-    const params = {
-      PageNumber: page,
-      PageSize: pageSize,
-      ...filters,
-    };
-
-    // Elimina filtros vacíos o nulos
+    const params = { PageNumber: page, PageSize: pageSize, ...filters };
     Object.keys(params).forEach(
       key => (params[key] === "" || params[key] == null) && delete params[key]
     );
@@ -80,9 +70,7 @@ export default function Comprobantes() {
     }, 0);
   }
 
-  useEffect(() => {
-    cargar();
-  }, [page, pageSize, filters]);
+  useEffect(() => { cargar(); }, [page, pageSize, filters]);
 
   async function handleEliminarComprobante(id) {
     if (!window.confirm("¿Seguro que desea eliminar?")) return;
@@ -121,31 +109,27 @@ export default function Comprobantes() {
         <div className="card card-full contribuyentes-panel">
           <h3>Comprobantes</h3>
 
-          <div
-            className="contribuyentes-toolbar"
-            style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}
-          >
+          <div className="contribuyentes-toolbar">
             <input
+              className="filter-input"
               placeholder="NCF"
               value={filters.ncf}
               onChange={(e) => handleFilterChange("ncf", e.target.value)}
               disabled={modal.open}
-              style={{ flex: "1 1 150px" }}
             />
 
-            {/* Input tipo fecha para FechaEmision */}
             <input
+              className="filter-input"
               type="date"
               placeholder="Fecha emisión"
               value={filters.FechaEmision}
               onChange={(e) => handleFilterChange("FechaEmision", e.target.value)}
               disabled={modal.open}
-              style={{ flex: "1 1 150px" }}
             />
 
-            {/* Filtro contribuyente con autocompletado */}
-            <div style={{ position: "relative", flex: "2 1 300px" }}>
+            <div className="autocomplete-wrapper">
               <input
+                className="filter-input"
                 placeholder="Buscar contribuyente..."
                 value={searchContribuyente}
                 onChange={(e) => {
@@ -154,24 +138,12 @@ export default function Comprobantes() {
                   setFilters(prev => ({ ...prev, ContribuyenteId: null }));
                 }}
                 disabled={modal.open}
-                style={{ width: "100%" }}
                 autoComplete="off"
               />
               {seleccionadoContribuyente && (
                 <button
                   onClick={onClearContribuyente}
-                  style={{
-                    position: "absolute",
-                    right: 8,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                    fontWeight: "bold",
-                    fontSize: "1.2rem",
-                    color: "#666",
-                  }}
+                  className="clear-btn"
                   title="Limpiar"
                   type="button"
                 >
@@ -179,34 +151,9 @@ export default function Comprobantes() {
                 </button>
               )}
               {contribuyentes.length > 0 && (
-                <ul
-                  style={{
-                    position: "absolute",
-                    top: "100%",
-                    left: 0,
-                    right: 0,
-                    background: "white",
-                    border: "1px solid #ccc",
-                    maxHeight: 180,
-                    overflowY: "auto",
-                    zIndex: 10,
-                    margin: 0,
-                    padding: 0,
-                    listStyle: "none",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                    borderRadius: 4,
-                  }}
-                >
+                <ul className="autocomplete">
                   {contribuyentes.map((c) => (
-                    <li
-                      key={c.id}
-                      onClick={() => onSelectContribuyente(c)}
-                      style={{
-                        padding: "0.5rem 1rem",
-                        cursor: "pointer",
-                        borderBottom: "1px solid #eee",
-                      }}
-                    >
+                    <li key={c.id} onClick={() => onSelectContribuyente(c)}>
                       {c.fistName} {c.lastName}
                     </li>
                   ))}
@@ -215,6 +162,7 @@ export default function Comprobantes() {
             </div>
 
             <button
+              className="btn-agregar"
               onClick={() => setModal({ open: true, modo: "nuevo" })}
               disabled={modal.open}
             >
@@ -222,18 +170,12 @@ export default function Comprobantes() {
             </button>
           </div>
 
-          <div
-            id="listaComprobantes"
-            ref={listaRef}
-            className="contribuyentes-lista"
-            style={{ marginTop: "1rem" }}
-          >
+          <div id="listaComprobantes" ref={listaRef} className="contribuyentes-lista listaComprobantes">
             {data.length === 0 && <p>No hay comprobantes.</p>}
             {data.map((c) => (
               <div
                 key={c.id}
                 className="card contribuyente-item"
-                style={{ cursor: "pointer" }}
                 onClick={() => setSeleccionado(c)}
               >
                 <div>
@@ -248,28 +190,18 @@ export default function Comprobantes() {
             ))}
           </div>
 
-          <div className="contribuyentes-footer" style={{ marginTop: "1rem" }}>
+          <div className="contribuyentes-footer">
             <span>
               Mostrando {(page - 1) * pageSize + 1} –{" "}
               {Math.min(page * pageSize, totalRecords)} de {totalRecords}
             </span>
 
-            <div className="paginacion" style={{ marginTop: "0.5rem" }}>
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-              >
+            <div className="paginacion">
+              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
                 ◀ Anterior
               </button>
-
-              <strong>
-                {page} / {totalPages}
-              </strong>
-
-              <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-              >
+              <strong>{page} / {totalPages}</strong>
+              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
                 Siguiente ▶
               </button>
             </div>
@@ -321,6 +253,7 @@ export default function Comprobantes() {
     </>
   );
 }
+
 
 
 

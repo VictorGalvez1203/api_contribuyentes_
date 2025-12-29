@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { getComprobantes } from "../../api/comprobantesApi";
 
-export default function ContribuyenteDetalle({ contribuyente, onVolver, onEditar, onEliminar }) {
+export default function ContribuyenteDetalle({ contribuyente, onVolver, onEditar, onEliminar, onVerComprobante }) {
   const [comprobantes, setComprobantes] = useState([]);
   const [pageComprobantes, setPageComprobantes] = useState(1);
   const [pageSizeComprobantes, setPageSizeComprobantes] = useState(3);
@@ -71,7 +71,8 @@ export default function ContribuyenteDetalle({ contribuyente, onVolver, onEditar
           <div
             key={c.id}
             className="card contribuyente-item"
-            style={{ cursor: "default" }}
+            style={{ cursor: "pointer" }}
+            onClick={() => onVerComprobante && onVerComprobante(c)}
           >
             <div>
               <h4>{c.ncf}</h4>
