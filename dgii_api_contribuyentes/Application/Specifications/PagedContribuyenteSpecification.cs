@@ -42,8 +42,9 @@ namespace Application.Specifications
             // 🔹 Filtro por Estado
             if (!string.IsNullOrWhiteSpace(status))
             {
-                Query.Where(c => c.Status.Contains(status));
+                Query.Where(c => c.Status.ToLower() == status.ToLower());
             }
+
 
             // 🔹 Ordenación estable
             Query.OrderBy(c => c.FistName)
