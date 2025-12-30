@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import ComprobanteDetalle from "./ComprobanteDetalle";
 import ComprobanteModal from "./ComprobanteModal";
+import ContribuyenteDetalle from "../contribuyentes/ContribuyenteDetalle"; // ✅ NUEVO
+import ContribuyenteModal from "../contribuyentes/ContribuyenteModal";
 import {
   getComprobantes,
   createComprobante,
@@ -8,7 +10,11 @@ import {
   deleteComprobante,
 } from "../../api/comprobantesApi";
 
-import { getContribuyentes } from "../../api/contribuyentesApi";
+import { 
+  getContribuyentes,
+  deleteContribuyente,
+  updateContribuyente 
+} from "../../api/contribuyentesApi";
 
 export default function Comprobantes() {
   const [data, setData] = useState([]);
@@ -20,8 +26,11 @@ export default function Comprobantes() {
   const [searchContribuyente, setSearchContribuyente] = useState("");
   const [contribuyentes, setContribuyentes] = useState([]);
   const [seleccionadoContribuyente, setSeleccionadoContribuyente] = useState(null);
-  const [seleccionado, setSeleccionado] = useState(null);
-  const [modal, setModal] = useState({ open: false, modo: "editar" });
+
+  const [seleccionado, setSeleccionado] = useState(null); // comprobante
+  const [selectedContribuyente, setSelectedContribuyente] = useState(null); // ✅ NUEVO
+
+  const [modal, setModal] = useState({ open: false, modo: "editar", tipo: null });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -103,9 +112,53 @@ export default function Comprobantes() {
     setPage(1);
   }
 
+  // ✅ NUEVO: ver contribuyente desde el detalle
+  const handleVerContribuyente = (contrib) => {
+    setSelectedContribuyente(contrib);
+  };
+
+ async function handleEliminarContribuyente(id) {
+  if (!window.confirm("¿Seguro que desea eliminar este contribuyente?")) return;
+
+  try {
+    await deleteContribuyente(id);
+    alert("Contribuyente eliminado con éxito.");
+
+    // 1️⃣ cerrar vista de contribuyente
+    setSelectedContribuyente(null);
+
+    // 2️⃣ limpiar búsqueda y filtro
+    setSeleccionadoContribuyente(null);
+    setSearchContribuyente("");
+    setFilters(prev => ({ ...prev, ContribuyenteId: null }));
+
+    // 3️⃣ volver a la lista de comprobantes
+    setSeleccionado(null);
+    setPage(1);
+
+    // 4️⃣ recargar comprobantes
+    await cargar();
+  } catch (error) {
+    alert(
+      "Error eliminando contribuyente: " +
+      (error.message || "Error desconocido")
+    );
+    console.error(error.response?.data || error);
+  }
+}
+
+
+  function handleEditarContribuyente() {
+    setModal({ open: true, modo: "editar", tipo: "contribuyente" });
+  }
+
+
   return (
     <>
-      {!seleccionado && (
+      {/* =========================
+         LISTA DE COMPROBANTES
+      ========================= */}
+      {!seleccionado && !selectedContribuyente && (
         <div className="card card-full contribuyentes-panel">
           <h3>Comprobantes</h3>
 
@@ -170,7 +223,11 @@ export default function Comprobantes() {
             </button>
           </div>
 
-          <div id="listaComprobantes" ref={listaRef} className="contribuyentes-lista listaComprobantes">
+          <div
+            id="listaComprobantes"
+            ref={listaRef}
+            className="contribuyentes-lista listaComprobantes"
+          >
             {data.length === 0 && <p>No hay comprobantes.</p>}
             {data.map((c) => (
               <div
@@ -209,15 +266,35 @@ export default function Comprobantes() {
         </div>
       )}
 
-      {seleccionado && (
+      {/* =========================
+         DETALLE COMPROBANTE
+      ========================= */}
+      {seleccionado && !selectedContribuyente && (
         <ComprobanteDetalle
           comprobante={seleccionado}
           onVolver={() => setSeleccionado(null)}
           onEditar={() => setModal({ open: true, modo: "editar" })}
           onEliminar={() => handleEliminarComprobante(seleccionado.id)}
+          onVerContribuyente={handleVerContribuyente} // ✅ NUEVO
         />
       )}
 
+      {/* =========================
+   DETALLE CONTRIBUYENTE
+========================= */}
+      {selectedContribuyente && (
+        <ContribuyenteDetalle
+          contribuyente={selectedContribuyente}
+          onVolver={() => setSelectedContribuyente(null)}
+          onEditar={handleEditarContribuyente}   // ✅ REAL
+          onEliminar={() => handleEliminarContribuyente(selectedContribuyente.id)} // ✅ REAL
+        />
+      )}
+
+
+      {/* =========================
+         MODAL
+      ========================= */}
       {modal.open && (
         <ComprobanteModal
           modo={modal.modo}
@@ -242,7 +319,7 @@ export default function Comprobantes() {
               } else {
                 alert(
                   "Error guardando comprobante: " +
-                    (error.message || "Error desconocido")
+                  (error.message || "Error desconocido")
                 );
               }
               console.error(error.response?.data || error);
@@ -250,9 +327,45 @@ export default function Comprobantes() {
           }}
         />
       )}
+
+      {/* =========================
+   MODAL CONTRIBUYENTE
+========================= */}
+      {modal.open && modal.tipo === "contribuyente" && (
+        <ContribuyenteModal
+          modo={modal.modo}
+          data={modal.modo === "editar" ? selectedContribuyente : null}
+          onClose={() => setModal({ open: false, modo: "editar", tipo: null })}
+          onSave={async (contribuyenteActualizado) => {
+            try {
+              await updateContribuyente(
+                contribuyenteActualizado.id,
+                contribuyenteActualizado
+              );
+              alert("Contribuyente actualizado con éxito.");
+              setModal({ open: false, modo: "editar", tipo: null });
+              setSelectedContribuyente(contribuyenteActualizado);
+              await cargar();
+            } catch (error) {
+              const apiErrors = error.response?.data?.Errors;
+              if (apiErrors?.length) {
+                alert("Errores de validación:\n" + apiErrors.join("\n"));
+              } else {
+                alert(
+                  "Error actualizando contribuyente: " +
+                  (error.message || "Error desconocido")
+                );
+              }
+              console.error(error.response?.data || error);
+            }
+          }}
+        />
+      )}
+
     </>
   );
 }
+
 
 
 

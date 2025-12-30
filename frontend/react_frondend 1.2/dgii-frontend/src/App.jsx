@@ -6,15 +6,17 @@ import Dashboard from "./dashboard/Dashboard";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
 function AppContent() {
-  const { token } = useAuth();
+  const { token, loading } = useAuth();
   const [view, setView] = useState("login");
 
-  // 🔐 SI HAY TOKEN → DASHBOARD COMPLETO
+  if (loading) return null; // evita parpadeos
+
+  // 🔐 SI HAY TOKEN → DASHBOARD
   if (token) {
     return <Dashboard />;
   }
 
-  // 🔑 SI NO HAY TOKEN → LOGIN / REGISTRO
+  // 🔑 LOGIN / REGISTRO
   return (
     <>
       {view === "login" && (
@@ -27,6 +29,7 @@ function AppContent() {
     </>
   );
 }
+
 
 export default function App() {
   return (

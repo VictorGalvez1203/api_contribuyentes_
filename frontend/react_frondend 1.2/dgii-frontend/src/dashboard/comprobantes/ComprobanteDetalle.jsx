@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { getContribuyenteById } from "../../api/contribuyentesApi";
 
-export default function ComprobanteDetalle({ comprobante, onVolver, onEditar, onEliminar }) {
+export default function ComprobanteDetalle({
+  comprobante,
+  onVolver,
+  onEditar,
+  onEliminar,
+  onVerContribuyente, // <-- agregado (opcional)
+}) {
   const [contribuyente, setContribuyente] = useState(null);
 
   useEffect(() => {
@@ -9,12 +15,8 @@ export default function ComprobanteDetalle({ comprobante, onVolver, onEditar, on
       if (!comprobante?.contribuyenteId) return;
 
       try {
-        // Llamada al API para obtener el contribuyente por ID
         const res = await getContribuyenteById(comprobante.contribuyenteId);
-
-        // Extraemos el objeto real
-        const c = res.data; 
-
+        const c = res.data;
         if (c && c.id) setContribuyente(c);
       } catch (error) {
         console.error("Error cargando contribuyente:", error);
@@ -41,8 +43,16 @@ export default function ComprobanteDetalle({ comprobante, onVolver, onEditar, on
       ========================= */}
       {contribuyente && (
         <div
-          className={`card card-full card contribuyente-item ${contribuyente.status === "Activo" ? "activo" : "inactivo"}`}
-          style={{ marginTop: "1.5rem", padding: "1rem" }}
+          className={`card card-full contribuyente-item ${contribuyente.status === "Activo" ? "activo" : "inactivo"
+            }`}
+          style={{
+            marginTop: "1.5rem",
+            padding: "1rem",
+            cursor: onVerContribuyente ? "pointer" : "default",
+          }}
+          onClick={() =>
+            onVerContribuyente && onVerContribuyente(contribuyente)
+          }
         >
           <div>
             <h4>{contribuyente.fistName} {contribuyente.lastName}</h4>
@@ -69,5 +79,6 @@ export default function ComprobanteDetalle({ comprobante, onVolver, onEditar, on
     </div>
   );
 }
+
 
 
