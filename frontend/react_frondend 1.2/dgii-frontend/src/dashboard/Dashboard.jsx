@@ -5,6 +5,9 @@ import Contribuyentes from "./contribuyentes/Contribuyentes";
 import Comprobantes from "./comprobantes/Comprobantes";
 import Footer from  "./Footer";
 import "./dashboard.css";
+import Usuarios from "./usuarios/Usuarios";
+import Configuracion from "./config/Configuracion";
+
 
 export default function Dashboard() {
   const [panel, setPanel] = useState("contribuyentes");
@@ -27,6 +30,8 @@ export default function Dashboard() {
         <div className="content">
           {panel === "contribuyentes" && <Contribuyentes />}
           {panel === "comprobantes" && <Comprobantes />}
+          {panel === "usuarios" && <Usuarios />}
+          {panel === "config" && <Configuracion />}
         </div>
 
         <Footer />
