@@ -46,32 +46,32 @@ export default function Configuracion() {
     setForm(prev => ({ ...prev, [field]: value }));
   }
 
- async function handleGuardar() {
-  try {
-    const payload = {
-      id: form.id,
-      username: form.username,
-      email: form.email,
-      rol_Id: form.rol_Id,
-      estado: form.estado,
-    };
+  async function handleGuardar() {
+    try {
+      const payload = {
+        id: form.id,
+        username: form.username,
+        email: form.email,
+        rol_Id: form.rol_Id,
+        estado: form.estado,
+      };
 
-    if (form.password) {
-      payload.password = form.password;
+      if (form.password) {
+        payload.password = form.password;
+      }
+
+      await updateUsuario(form.id, payload, token);
+
+      alert("Datos actualizados correctamente");
+
+      // 🔁 RECARGA COMPLETA DEL DASHBOARD
+      window.location.reload();
+
+    } catch (error) {
+      alert("Error actualizando datos");
+      console.error(error);
     }
-
-    await updateUsuario(form.id, payload, token);
-
-    alert("Datos actualizados correctamente");
-
-    // 🔁 RECARGA COMPLETA DEL DASHBOARD
-    window.location.reload();
-
-  } catch (error) {
-    alert("Error actualizando datos");
-    console.error(error);
   }
-}
 
 
 

@@ -1,82 +1,224 @@
+/* ================= VARIABLES DGII ================= */
+
+:root {
+  /* 🎨 Verdes DGII */
+  --dgii-green-primary: #6FB000;
+  --dgii-green-dark: #4E7C00;
+  --dgii-green-light: #A6D64F;
+
+  /* UI light */
+  --bg-card: #F9FAFB; /* off-white */
+  --text-primary: #1F2937;
+  --text-secondary: #4B5563;
+}
+
 /* ================= LOGIN / REGISTER ================= */
 
 .login-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: #f4f6f9;
+
+  min-height: 100vh;
+  padding: 1rem;
+
+  background-image: url("../assets/dgii-8_fondo.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
+/* Overlay oscuro */
+.login-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1;
+}
+
+/* Card */
 .login-card {
-  background: #ffffff;
+  position: relative;
+  z-index: 2;
+
   width: 100%;
-  max-width: 480px;
+  max-width: 420px;
   padding: 2rem;
+
+  background: var(--bg-card);
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   text-align: center;
 }
 
+/* Logo */
 .login-card img {
-  width: 140px;
+  width: 300px;
+  max-width: 100%;
   margin-bottom: 1.5rem;
 }
 
+/* Título */
 .login-card h2 {
   margin-bottom: 1rem;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
+/* Inputs */
 .login-card input {
   width: 100%;
   padding: 0.75rem;
   margin-bottom: 1rem;
+
   border-radius: 8px;
   border: 1px solid #d1d5db;
+  color: var(--text-primary);
+  font-size: 1rem;
 }
 
+.login-card input:focus {
+  outline: none;
+  border-color: var(--dgii-green-primary);
+  box-shadow: 0 0 0 2px rgba(111, 176, 0, 0.2);
+}
+
+/* Botón principal */
 .login-card button[type="submit"] {
   width: 100%;
   padding: 0.75rem;
-  background: #2563eb;
+
+  background: var(--dgii-green-primary);
   border: none;
   color: #ffffff;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  transition: background 0.2s ease;
 }
 
-/* 🔹 Botón tipo link (Regístrate / Volver al login) */
+.login-card button[type="submit"]:hover {
+  background: var(--dgii-green-dark);
+}
+
+.login-card button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Link button */
 .link-button {
   margin-top: 1rem;
   background: none;
   border: none;
-  color: #2563eb;
+  color: var(--dgii-green-primary);
   font-size: 0.9rem;
   cursor: pointer;
   text-decoration: underline;
 }
 
 .link-button:hover {
-  color: #1e40af;
+  color: var(--dgii-green-dark);
 }
 
 /* Errores */
 .error {
   color: #dc2626;
-  margin-top: .5rem;
-  font-size: .85rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
 }
+
+/* ================= RESPONSIVE ================= */
+
+/* Tablets y laptops pequeñas */
+@media (max-width: 768px) {
+  .login-card {
+    max-width: 380px;
+  }
+
+  .login-card img {
+    width: 250px;
+  }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.5rem 1.25rem;
+    border-radius: 10px;
+  }
+
+  .login-card img {
+    width: 220px;
+  }
+
+  .login-card h2 {
+    font-size: 1.25rem;
+  }
+
+  .login-card input {
+    padding: 0.65rem;
+    font-size: 16px; /* evita zoom en iOS */
+  }
+
+  .login-card button[type="submit"] {
+    padding: 0.7rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Pantallas bajas */
+@media (max-height: 700px) {
+  .login-container {
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+}
+
+/* ================= RESET ================= */
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
 
-.login-card img {
-  width: 300px; /* antes 140px */
-  margin-bottom: 1.5rem;
+
+/* ================= ANIMACIONES ================= */
+
+/* Estado base */
+.login-card {
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+/* Cuando se va a cambiar de vista */
+.login-card.fade-out {
+  animation: fadeOutDown 0.2s ease forwards;
+}
+
+/* Entrando */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Saliendo */
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+  }
 }

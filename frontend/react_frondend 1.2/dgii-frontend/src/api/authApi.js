@@ -9,14 +9,21 @@ export async function loginRequest({ email, password }) {
 
   const result = await response.json();
 
-  // ❌ Backend controlado
-  if (!result.succeeded) {
-    if (Array.isArray(result.errors)) {
-      throw result.errors; // ⬅️ array de errores
-    }
+  // 🔥 NORMALIZACIÓN AQUÍ
+  const message = result.message ?? result.Message ?? null;
+  const errors  = result.errors  ?? result.Errors  ?? [];
+  const data    = result.data    ?? result.Data    ?? null;
 
-    throw [result.message || "Error al iniciar sesión"];
+  if (!response.ok) {
+    throw {
+      message: message || "Error al iniciar sesión",
+      errors,
+      status: response.status,
+    };
   }
 
-  return result.data;
+  return data;
 }
+
+
+

@@ -46,6 +46,7 @@ export function AuthProvider({ children }) {
 
   // 🔐 LOGIN
   async function login(email, password) {
+  try {
     const data = await loginRequest({ email, password });
 
     localStorage.setItem("token", data.token);
@@ -59,11 +60,14 @@ export function AuthProvider({ children }) {
     const timeout = expiresAt - Date.now();
 
     setTimeout(() => {
-      alert("Tu sesión ha expirado. Por favor inicia sesión nuevamente.");
       logout();
     }, timeout);
-  }
 
+  } catch (error) {
+    // 🔥 AQUÍ ESTÁ LA MAGIA
+    throw error;
+  }
+}
   // 🚪 LOGOUT
   function logout() {
     localStorage.clear();
