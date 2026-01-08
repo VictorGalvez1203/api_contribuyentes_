@@ -3,49 +3,38 @@ import Login from "./auth/Login";
 import Register from "./auth/Register";
 import Dashboard from "./dashboard/Dashboard";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { ToastProvider } from "./context/ToastContext";
 
 function AppContent() {
   const { token, loading } = useAuth();
+  const [showRegister, setShowRegister] = useState(false);
 
-  const [view, setView] = useState("login");
-  const [isAnimating, setIsAnimating] = useState(false);
+  // ⛔ Bloquea render hasta validar sesión
+  if (loading) return null;
 
-  if (loading) return null; // evita parpadeos
-
-  // 🔐 SI HAY TOKEN → DASHBOARD
+  // ✅ Sesión activa → Dashboard
   if (token) {
     return <Dashboard />;
   }
 
-  function changeView(nextView) {
-    setIsAnimating(true);
-
-    setTimeout(() => {
-      setView(nextView);
-      setIsAnimating(false);
-    }, 300); // ⏱ coincide con fadeOut
-  }
-
-  return (
-    <div className={isAnimating ? "fade-out" : ""}>
-      {view === "login" && (
-        <Login onRegister={() => changeView("register")} />
-      )}
-
-      {view === "register" && (
-        <Register onBack={() => changeView("login")} />
-      )}
-    </div>
+  // ❌ Sin sesión → Login / Register
+  return showRegister ? (
+    <Register onBack={() => setShowRegister(false)} />
+  ) : (
+    <Login onRegister={() => setShowRegister(true)} />
   );
 }
 
 export default function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </AuthProvider>
   );
 }
+
 
 
 

@@ -8,7 +8,7 @@
         }
 
         // ✅ Caso OK
-        public Response(T data, string message = null)
+        public Response(T data, string? message = null)
         {
             Succeeded = true;
             Message = message;

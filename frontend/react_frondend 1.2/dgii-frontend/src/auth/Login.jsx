@@ -1,45 +1,38 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import Toast from "../dashboard/components/Toast";
+import { useToast } from "../context/ToastContext";
 import LogoImg from "../assets/dgii_logo.png";
 import "./auth.css";
 
 export default function Login({ onRegister }) {
   const { login } = useAuth();
+  const { showToast } = useToast();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [toast, setToast] = useState(null);
 
   async function handleSubmit(e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    setToast({
-      type: "success",
-      message: "Inicio de sesión exitoso",
-    });
-
-    // ⏳ Pequeño delay para que el toast se vea
-    setTimeout(async () => {
+    try {
       await login(email, password);
-    }, 800);
 
-  } catch (err) {
-    if (Array.isArray(err.errors) && err.errors.length > 0) {
-      setToast({
-        type: "error",
-        message: err.errors,
-      });
-    } else {
-      setToast({
-        type: "error",
-        message: err.message || "Error al iniciar sesión",
-      });
+      showToast("success", "Inicio de sesión exitoso");
+
+    } catch (err) {
+      const messages = [];
+
+      if (err.message) {
+    messages.push(err.message);
+  }
+
+  if (Array.isArray(err.errors) && err.errors.length > 0) {
+    messages.push(...err.errors);
+  }
+
+  showToast("error", messages);
     }
   }
-}
-
 
   return (
     <div className="login-container">
@@ -74,16 +67,9 @@ export default function Login({ onRegister }) {
           ¿No tienes cuenta? Regístrate
         </button>
       </div>
-
-      {toast && (
-        <Toast
-          type={toast.type}
-          message={toast.message}
-          onClose={() => setToast(null)}
-        />
-      )}
     </div>
   );
 }
+
 
 

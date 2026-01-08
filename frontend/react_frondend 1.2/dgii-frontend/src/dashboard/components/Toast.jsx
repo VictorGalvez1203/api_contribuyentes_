@@ -14,15 +14,19 @@ export default function Toast({
 
   return (
     <div className={`toast toast-${type}`}>
-      {Array.isArray(message) ? (
-        <ul className="toast-list">
-          {message.map((msg, i) => (
-            <li key={i}>{msg}</li>
-          ))}
-        </ul>
-      ) : (
-        <span>{message}</span>
-      )}
+     {Array.isArray(message) ? (
+  <>
+    <strong>{message[0]}</strong>
+    <ul className="toast-list">
+      {message.slice(1).map((msg, i) => (
+        <li key={i}>{msg}</li>
+      ))}
+    </ul>
+  </>
+) : (
+  <span>{message}</span>
+)}
+
     </div>
   );
 }

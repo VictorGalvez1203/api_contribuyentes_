@@ -20,24 +20,26 @@ namespace Application.Feautres.Auth.Commands
         private readonly IPasswordHasher<usuarios> _passwordHasher;
         private readonly IJwtService _jwtService;
 
+#pragma warning disable IDE0290
         public LoginCommandHandler(IRepositoryAsync<usuarios> repositoryAsync, IPasswordHasher<usuarios> passwordHasher, IJwtService jwtService)
         {
             _passwordHasher = passwordHasher;
             _jwtService = jwtService;
             _repositoryAsync = repositoryAsync;
         }
+#pragma warning restore IDE0290
 
-        public async Task<Response<LoginResponseDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<Response<LoginResponseDto>> Handle(
+     LoginCommand request,
+     CancellationToken cancellationToken)
         {
-            // 1️ Buscar usuario por Email usando Specification
             var spec = new GetUsuarioByEmailSpecification(request.Email!);
             var users = await _repositoryAsync.ListAsync(spec, cancellationToken);
             var user = users.FirstOrDefault();
 
             if (user == null)
-                throw new Exception("Credenciales inválidas");
+                return new Response<LoginResponseDto>("Credenciales inválidas");
 
-            // 2️ Verificar contraseña
             var passwordResult = _passwordHasher.VerifyHashedPassword(
                 user,
                 user.Password_Hash!,
@@ -45,13 +47,11 @@ namespace Application.Feautres.Auth.Commands
             );
 
             if (passwordResult == PasswordVerificationResult.Failed)
-                throw new Exception("Credenciales inválidas");
+                return new Response<LoginResponseDto>("Credenciales inválidas");
 
-            // 3️ Validar estado
             if (user.Estado != "Activo")
-                throw new Exception("Usuario inactivo");
+                return new Response<LoginResponseDto>("Usuario inactivo");
 
-            // 4️ Generar JWT
             var token = _jwtService.GenerateToken(user);
 
             return new Response<LoginResponseDto>(new LoginResponseDto
@@ -60,5 +60,6 @@ namespace Application.Feautres.Auth.Commands
                 Expiration = DateTime.UtcNow.AddMinutes(20)
             });
         }
+
     }
 }
