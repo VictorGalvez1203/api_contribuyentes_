@@ -27,7 +27,7 @@ export default function Dashboard() {
       <div className="main">
         <Topbar />
 
-        <div className="content">
+        <div className="content" key={panel}>
           {panel === "contribuyentes" && <Contribuyentes />}
           {panel === "comprobantes" && <Comprobantes />}
           {panel === "usuarios" && <Usuarios />}

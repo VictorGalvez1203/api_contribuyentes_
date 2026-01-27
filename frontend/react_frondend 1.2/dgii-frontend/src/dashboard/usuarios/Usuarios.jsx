@@ -9,6 +9,7 @@ import {
     updateUsuario,
     deleteUsuario,
 } from "../../api/usuariosApi";
+import { useToast } from "../../context/ToastContext";
 
 export default function Usuarios() {
     const [data, setData] = useState([]);
@@ -27,9 +28,11 @@ export default function Usuarios() {
     const [pageSize, setPageSize] = useState(10);
     const [totalRecords, setTotalRecords] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
+    const [isAnimating, setIsAnimating] = useState(false);
 
     const listaRef = useRef(null);
     const token = localStorage.getItem("token");
+    const { showToast } = useToast();
 
     function handleFilterChange(field, value) {
         setFilters(prev => ({ ...prev, [field]: value }));
@@ -75,6 +78,12 @@ export default function Usuarios() {
         cargar();
     }, [page, pageSize, filters]);
 
+    useEffect(() => {
+        setIsAnimating(true);
+        const timer = setTimeout(() => setIsAnimating(false), 600);
+        return () => clearTimeout(timer);
+    }, [data]);
+
     async function handleEliminar(id) {
         if (!window.confirm("¿Eliminar usuario?")) return;
 
@@ -82,13 +91,13 @@ export default function Usuarios() {
             await deleteUsuario(id, token);
 
             // ✅ ALERTA AL ELIMINAR
-            alert("Usuario eliminado correctamente");
+            showToast("success", "Usuario eliminado correctamente");
 
             setSeleccionado(null);
             setPanel("lista");
             await cargar();
         } catch (error) {
-            alert("Error eliminando usuario");
+            showToast("error", "Error eliminando usuario");
             console.error(error);
         }
     }
@@ -144,25 +153,46 @@ export default function Usuarios() {
                     <div
                         id="listaUsuarios"
                         ref={listaRef}
-                        className="usuarios-lista"
+                        className={`usuarios-tabla-contenedor ${isAnimating ? 'animating' : ''}`}
                     >
-                        {data.map(u => (
-                            <div
-                                key={u.id}
-                                className={`card contribuyente-item ${u.estado === "Activo" ? "activo" : "inactivo"
-                                    }`}
-                                onClick={() => {
-                                    setSeleccionado(u);
-                                    setPanel("detalle");
-                                }}
-                            >
-                                <div>
-                                    <h4>{u.username}</h4>
-                                    <p>{u.email}</p>
-                                </div>
-                                <strong>{u.estado}</strong>
-                            </div>
-                        ))}
+                        <table className="usuarios-tabla">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Estado</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((u, index) => (
+                                    <tr key={u.id} className={`${u.estado === "Activo" ? "activo" : "inactivo"}`}>
+                                        <td>{(page - 1) * pageSize + index + 1}</td>
+                                        <td>{u.username}</td>
+                                        <td>{u.email}</td>
+                                        <td>{u.nombreRol || 'N/A'}</td>
+                                        <td>
+                                            <span className={`estado-badge ${u.estado === "Activo" ? "activo" : "inactivo"}`}>
+                                                {u.estado}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button 
+                                                className="btn-tabla-ver"
+                                                onClick={() => {
+                                                    setSeleccionado(u);
+                                                    setPanel("detalle");
+                                                }}
+                                            >
+                                                Ver
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
 
                     <div className="contribuyentes-footer">
@@ -213,12 +243,12 @@ export default function Usuarios() {
                                 await createUsuario(usuario, token);
 
                                 // ✅ ALERTA AL CREAR USUARIO
-                                alert("Usuario creado correctamente");
+                                showToast("success", "Usuario creado correctamente");
                             } else {
                                 await updateUsuario(usuario.id, usuario, token);
 
                                 // ✅ ALERTA AL ACTUALIZAR USUARIO
-                                alert("Usuario actualizado correctamente");
+                                showToast("success", "Usuario actualizado correctamente");
                             }
 
                             setModal({ open: false, modo: "nuevo" });
@@ -226,7 +256,7 @@ export default function Usuarios() {
                             setPanel("lista");
                             await cargar();
                         } catch (error) {
-                            alert("Error guardando usuario");
+                            showToast("error", "Error guardando usuario");
                             console.error(error);
                         }
                     }}

@@ -12,9 +12,11 @@ import {
 
 import { 
   getContribuyentes,
+  getContribuyenteById,
   deleteContribuyente,
   updateContribuyente 
 } from "../../api/contribuyentesApi";
+import { useToast } from "../../context/ToastContext";
 
 export default function Comprobantes() {
   const [data, setData] = useState([]);
@@ -25,6 +27,7 @@ export default function Comprobantes() {
   });
   const [searchContribuyente, setSearchContribuyente] = useState("");
   const [contribuyentes, setContribuyentes] = useState([]);
+  const [contribuyentesMap, setContribuyentesMap] = useState({}); // Mapa de ID -> datos del contribuyente
   const [seleccionadoContribuyente, setSeleccionadoContribuyente] = useState(null);
 
   const [seleccionado, setSeleccionado] = useState(null); // comprobante
@@ -35,8 +38,10 @@ export default function Comprobantes() {
   const [pageSize, setPageSize] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const listaRef = useRef(null);
+  const { showToast } = useToast();
 
   function handleFilterChange(field, value) {
     setFilters(prev => ({ ...prev, [field]: value }));
@@ -67,12 +72,37 @@ export default function Comprobantes() {
     );
 
     const res = await getComprobantes(params);
-
-    setData(res.data || []);
+    const comprobantes = res.data || [];
+    
+    setData(comprobantes);
     setPage(res.pageNumber);
     setPageSize(res.pageSize);
     setTotalRecords(res.totalRecords);
     setTotalPages(res.totalPages);
+
+    // Cargar datos de contribuyentes para cada comprobante
+    if (comprobantes.length > 0) {
+      const uniqueContribuyenteIds = [...new Set(comprobantes.map(c => c.contribuyenteId).filter(Boolean))];
+      
+      const newMap = { ...contribuyentesMap };
+      
+      for (const id of uniqueContribuyenteIds) {
+        // Solo carga si no está ya en cache
+        if (!newMap[id]) {
+          try {
+            const resContribuyente = await getContribuyenteById(id);
+            const contribuyente = resContribuyente.data;
+            if (contribuyente) {
+              newMap[id] = contribuyente;
+            }
+          } catch (error) {
+            console.error(`Error cargando contribuyente ${id}:`, error);
+          }
+        }
+      }
+      
+      setContribuyentesMap(newMap);
+    }
 
     setTimeout(() => {
       listaRef.current?.scrollTo({ top: 0, behavior: "smooth" });
@@ -81,17 +111,23 @@ export default function Comprobantes() {
 
   useEffect(() => { cargar(); }, [page, pageSize, filters]);
 
+  useEffect(() => {
+    setIsAnimating(true);
+    const timer = setTimeout(() => setIsAnimating(false), 600);
+    return () => clearTimeout(timer);
+  }, [data]);
+
   async function handleEliminarComprobante(id) {
     if (!window.confirm("¿Seguro que desea eliminar?")) return;
 
     try {
       await deleteComprobante(id);
-      alert("Comprobante eliminado con éxito.");
+      showToast("success", "Comprobante eliminado con éxito.");
       setData(prev => prev.filter(x => x.id !== id));
       setSeleccionado(null);
       await cargar();
     } catch (error) {
-      alert("Error eliminando comprobante: " + (error.message || "Error desconocido"));
+      showToast("error", "Error eliminando comprobante: " + (error.message || "Error desconocido"));
       console.error(error.response?.data || error);
     }
   }
@@ -122,7 +158,7 @@ export default function Comprobantes() {
 
   try {
     await deleteContribuyente(id);
-    alert("Contribuyente eliminado con éxito.");
+    showToast("success", "Contribuyente eliminado con éxito.");
 
     // 1️⃣ cerrar vista de contribuyente
     setSelectedContribuyente(null);
@@ -139,7 +175,8 @@ export default function Comprobantes() {
     // 4️⃣ recargar comprobantes
     await cargar();
   } catch (error) {
-    alert(
+    showToast(
+      "error",
       "Error eliminando contribuyente: " +
       (error.message || "Error desconocido")
     );
@@ -226,25 +263,49 @@ export default function Comprobantes() {
           <div
             id="listaComprobantes"
             ref={listaRef}
-            className="contribuyentes-lista listaComprobantes"
+            className={`comprobantes-tabla-contenedor ${isAnimating ? 'animating' : ''}`}
           >
             {data.length === 0 && <p>No hay comprobantes.</p>}
-            {data.map((c) => (
-              <div
-                key={c.id}
-                className="card contribuyente-item"
-                onClick={() => setSeleccionado(c)}
-              >
-                <div>
-                  <h4>{c.ncf}</h4>
-                  <p>
-                    <strong>Fecha emisión:</strong>{" "}
-                    {new Date(c.fechaEmision).toLocaleDateString()}
-                  </p>
-                </div>
-                <strong>${c.monto.toLocaleString()}</strong>
-              </div>
-            ))}
+            {data.length > 0 && (
+              <table className="comprobantes-tabla">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>NCF</th>
+                    <th>Fecha Emisión</th>
+                    <th>Contribuyente</th>
+                    <th>Monto</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((c, index) => {
+                    const contribuyente = contribuyentesMap[c.contribuyenteId];
+                    const nombre = contribuyente 
+                      ? `${contribuyente.fistName} ${contribuyente.lastName}`
+                      : "Cargando...";
+                    
+                    return (
+                      <tr key={c.id}>
+                        <td>{(page - 1) * pageSize + index + 1}</td>
+                        <td>{c.ncf}</td>
+                        <td>{new Date(c.fechaEmision).toLocaleDateString()}</td>
+                        <td>{nombre}</td>
+                        <td>${c.monto.toLocaleString()}</td>
+                        <td>
+                          <button 
+                            className="btn-tabla-ver"
+                            onClick={() => setSeleccionado(c)}
+                          >
+                            Ver
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
           </div>
 
           <div className="contribuyentes-footer">
@@ -304,10 +365,10 @@ export default function Comprobantes() {
             try {
               if (modal.modo === "nuevo") {
                 await createComprobante(nuevo);
-                alert("Comprobante creado con éxito.");
+                showToast("success", "Comprobante creado con éxito.");
               } else {
                 await updateComprobante(nuevo.id, nuevo);
-                alert("Comprobante actualizado con éxito.");
+                showToast("success", "Comprobante actualizado con éxito.");
               }
               setModal({ open: false });
               await cargar();
@@ -315,9 +376,10 @@ export default function Comprobantes() {
             } catch (error) {
               const apiErrors = error.response?.data?.Errors;
               if (apiErrors && Array.isArray(apiErrors) && apiErrors.length > 0) {
-                alert("Errores de validación:\n" + apiErrors.join("\n"));
+                showToast("error", "Errores de validación:\n" + apiErrors.join("\n"));
               } else {
-                alert(
+                showToast(
+                  "error",
                   "Error guardando comprobante: " +
                   (error.message || "Error desconocido")
                 );
@@ -342,16 +404,17 @@ export default function Comprobantes() {
                 contribuyenteActualizado.id,
                 contribuyenteActualizado
               );
-              alert("Contribuyente actualizado con éxito.");
+              showToast("success", "Contribuyente actualizado con éxito.");
               setModal({ open: false, modo: "editar", tipo: null });
               setSelectedContribuyente(contribuyenteActualizado);
               await cargar();
             } catch (error) {
               const apiErrors = error.response?.data?.Errors;
               if (apiErrors?.length) {
-                alert("Errores de validación:\n" + apiErrors.join("\n"));
+                showToast("error", "Errores de validación:\n" + apiErrors.join("\n"));
               } else {
-                alert(
+                showToast(
+                  "error",
                   "Error actualizando contribuyente: " +
                   (error.message || "Error desconocido")
                 );

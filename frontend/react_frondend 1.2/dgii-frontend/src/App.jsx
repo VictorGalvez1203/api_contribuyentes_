@@ -4,6 +4,8 @@ import Register from "./auth/Register";
 import Dashboard from "./dashboard/Dashboard";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ToastProvider } from "./context/ToastContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import { ConfirmProvider } from "./context/ConfirmContext";
 
 function AppContent() {
   const { token, loading } = useAuth();
@@ -28,9 +30,13 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <ToastProvider>
-        <AppContent />
-      </ToastProvider>
+      <ThemeProvider>
+        <ToastProvider>
+          <ConfirmProvider>
+            <AppContent />
+          </ConfirmProvider>
+        </ToastProvider>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

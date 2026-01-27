@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useToast } from "../../context/ToastContext";
 import { getContribuyentes } from "../../api/contribuyentesApi";
 
 export default function ComprobanteModal({ modo, data, onClose, onSave }) {
+  const { showToast } = useToast();
   const [form, setForm] = useState({
     id: null,
     contribuyenteId: null,
@@ -168,7 +170,7 @@ export default function ComprobanteModal({ modo, data, onClose, onSave }) {
             className="btn-save"
             onClick={() => {
               if (!form.contribuyenteId) {
-                alert("Debe seleccionar un contribuyente");
+                showToast("error", "Debe seleccionar un contribuyente");
                 return;
               }
               onSave(form);

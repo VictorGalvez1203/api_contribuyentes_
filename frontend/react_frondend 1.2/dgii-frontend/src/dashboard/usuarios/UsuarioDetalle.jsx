@@ -27,49 +27,47 @@ export default function UsuarioDetalle({
     }, [usuario, token]);
 
     return (
-        <div className="card card-full" style={{ position: "relative" }}>
+        <div className="card card-full detalle-card" style={{ position: "relative", display: "flex", flexDirection: "column" }}>
             <h3>Detalle del Usuario</h3>
 
-            <div className="detalle-grid">
-                <div>
-                    <strong>Username:</strong> {usuario.username}
-                </div>
+            {/* SECCIÓN DATOS - 30% altura máxima, 2 columnas */}
+            <div className="detalle-seccion-datos">
+                <div className="detalle-grid-2col">
+                    <div>
+                        <strong>Username:</strong> {usuario.username}
+                    </div>
 
-                <div>
-                    <strong>Email:</strong> {usuario.email}
-                </div>
+                    <div>
+                        <strong>Email:</strong> {usuario.email}
+                    </div>
 
-                <div>
-                    <strong>Rol:</strong>{" "}
-                    {rolNombre ? rolNombre : "Cargando..."}
-                </div>
+                    <div>
+                        <strong>Rol:</strong>{" "}
+                        {rolNombre ? rolNombre : "Cargando..."}
+                    </div>
 
-                <div>
-                    <strong>Estado:</strong> {usuario.estado}
+                    <div>
+                        <strong>Estado:</strong> {usuario.estado}
+                    </div>
                 </div>
             </div>
 
-            <div
-                className="acciones"
-                style={{
-                    marginTop: "1.5rem",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: "1rem",
-                }}
-            >
-                <button className="btn-danger" onClick={onEliminar}>
-                    Eliminar
-                </button>
+            {/* SECCIÓN ACCIONES - Fija en la parte inferior */}
+            <div className="detalle-seccion-acciones">
+                <div></div>
+                <div style={{ display: "flex", gap: "1rem" }}>
+                    <button className="btn-danger" onClick={onEliminar}>
+                        Eliminar
+                    </button>
 
-                <button className="btn-secondary" onClick={onEditar}>
-                    Actualizar
-                </button>
+                    <button className="btn-secondary" onClick={onEditar}>
+                        Actualizar
+                    </button>
 
-                <button onClick={onVolver}>
-                    Volver
-                </button>
+                    <button onClick={onVolver}>
+                        Volver
+                    </button>
+                </div>
             </div>
         </div>
     );

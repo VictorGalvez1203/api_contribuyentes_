@@ -13,6 +13,7 @@ import {
   updateComprobante,
   deleteComprobante,
 } from "../../api/comprobantesApi";
+import { useToast } from "../../context/ToastContext";
 
 export default function Contribuyentes() {
   const [data, setData] = useState([]);
@@ -33,8 +34,10 @@ export default function Contribuyentes() {
   const [pageSize, setPageSize] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const listaRef = useRef(null);
+  const { showToast } = useToast();
 
   function handleFilterChange(field, value) {
     setFilters((prev) => ({ ...prev, [field]: value }));
@@ -63,6 +66,12 @@ export default function Contribuyentes() {
     cargar();
   }, [page, pageSize, filters]);
 
+  useEffect(() => {
+    setIsAnimating(true);
+    const timer = setTimeout(() => setIsAnimating(false), 600);
+    return () => clearTimeout(timer);
+  }, [data]);
+
   // ========================
   // Contribuyentes
   // ========================
@@ -70,13 +79,13 @@ export default function Contribuyentes() {
     if (!window.confirm("¿Seguro que desea eliminar este contribuyente?")) return;
     try {
       await deleteContribuyente(id);
-      alert("Contribuyente eliminado con éxito.");
+      showToast("success", "Contribuyente eliminado con éxito.");
       setData((prev) => prev.filter((x) => x.id !== id));
       setSeleccionado(null);
       await cargar();
       setPanel("listaContribuyentes");
     } catch (error) {
-      alert("Error eliminando contribuyente: " + (error.message || "Error desconocido"));
+      showToast("error", "Error eliminando contribuyente: " + (error.message || "Error desconocido"));
       console.error(error.response?.data || error);
     }
   }
@@ -88,11 +97,11 @@ export default function Contribuyentes() {
     if (!window.confirm("¿Seguro que desea eliminar este comprobante?")) return;
     try {
       await deleteComprobante(id);
-      alert("Comprobante eliminado con éxito.");
+      showToast("success", "Comprobante eliminado con éxito.");
       setSelectedComprobante(null);
       setPanel("detalleContribuyente");
     } catch (error) {
-      alert("Error eliminando comprobante: " + (error.message || "Error desconocido"));
+      showToast("error", "Error eliminando comprobante: " + (error.message || "Error desconocido"));
       console.error(error.response?.data || error);
     }
   }
@@ -125,16 +134,42 @@ export default function Contribuyentes() {
             <button onClick={() => setModal({ open: true, modo: "nuevo", tipo: "contribuyente" })}>+ Agregar</button>
           </div>
 
-          <div id="listaContribuyentes" ref={listaRef} className="contribuyentes-lista">
-            {data.map((c) => (
-              <div key={c.id} className={`card contribuyente-item ${c.status === "Activo" ? "activo" : "inactivo"}`} onClick={() => { setSeleccionado(c); setPanel("detalleContribuyente"); }}>
-                <div>
-                  <h4>{c.fistName} {c.lastName}</h4>
-                  <p><strong>RNC:</strong> {c.rncCedula}</p>
-                </div>
-                <strong>{c.status}</strong>
-              </div>
-            ))}
+          <div id="listaContribuyentes" ref={listaRef} className={`contribuyentes-tabla-contenedor ${isAnimating ? 'animating' : ''}`}>
+            <table className="contribuyentes-tabla">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>RNC / Cédula</th>
+                  <th>Estado</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((c, index) => (
+                  <tr key={c.id} className={`${c.status === "Activo" ? "activo" : "inactivo"}`}>
+                    <td>{(page - 1) * pageSize + index + 1}</td>
+                    <td>{c.fistName}</td>
+                    <td>{c.lastName}</td>
+                    <td>{c.rncCedula}</td>
+                    <td>
+                      <span className={`estado-badge ${c.status === "Activo" ? "activo" : "inactivo"}`}>
+                        {c.status}
+                      </span>
+                    </td>
+                    <td>
+                      <button 
+                        className="btn-tabla-ver"
+                        onClick={() => { setSeleccionado(c); setPanel("detalleContribuyente"); }}
+                      >
+                        Ver
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
           <div className="contribuyentes-footer">
@@ -177,13 +212,18 @@ export default function Contribuyentes() {
           onClose={() => setModal({ open: false })}
           onSave={async (nuevo) => {
             try {
-              if (modal.modo === "nuevo") await createContribuyente(nuevo);
-              else await updateContribuyente(nuevo.id, nuevo);
+              if (modal.modo === "nuevo") {
+                await createContribuyente(nuevo);
+                showToast("success", "Contribuyente creado con éxito.");
+              } else {
+                await updateContribuyente(nuevo.id, nuevo);
+                showToast("success", "Contribuyente actualizado con éxito.");
+              }
               setModal({ open: false });
               await cargar();
               if (modal.modo === "editar") setSeleccionado(null);
             } catch (error) {
-              alert("Error guardando contribuyente: " + (error.message || "Error desconocido"));
+              showToast("error", "Error guardando contribuyente: " + (error.message || "Error desconocido"));
               console.error(error);
             }
           }}
@@ -198,11 +238,12 @@ export default function Contribuyentes() {
           onSave={async (nuevo) => {
             try {
               await updateComprobante(nuevo.id, nuevo);
+              showToast("success", "Comprobante actualizado con éxito.");
               setModal({ open: false });
               setSelectedComprobante(null);
               setPanel("detalleContribuyente");
             } catch (error) {
-              alert("Error actualizando comprobante: " + (error.message || "Error desconocido"));
+              showToast("error", "Error actualizando comprobante: " + (error.message || "Error desconocido"));
               console.error(error);
             }
           }}

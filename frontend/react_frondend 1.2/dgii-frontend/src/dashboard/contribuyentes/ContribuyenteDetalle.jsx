@@ -7,11 +7,13 @@ export default function ContribuyenteDetalle({ contribuyente, onVolver, onEditar
   const [pageSizeComprobantes, setPageSizeComprobantes] = useState(3);
   const [totalRecordsComprobantes, setTotalRecordsComprobantes] = useState(0);
   const [totalPagesComprobantes, setTotalPagesComprobantes] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   const listaRef = useRef(null);
 
   useEffect(() => {
     async function cargarComprobantes() {
+      setIsLoading(true);
       try {
         const params = {
           ContribuyenteId: contribuyente.id,
@@ -24,12 +26,10 @@ export default function ContribuyenteDetalle({ contribuyente, onVolver, onEditar
         setPageSizeComprobantes(res.pageSize);
         setTotalRecordsComprobantes(res.totalRecords);
         setTotalPagesComprobantes(res.totalPages);
-
-        setTimeout(() => {
-          listaRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-        }, 0);
       } catch (error) {
         console.error("Error cargando comprobantes:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -43,64 +43,66 @@ export default function ContribuyenteDetalle({ contribuyente, onVolver, onEditar
   const hasta = Math.min(pageComprobantes * pageSizeComprobantes, totalRecordsComprobantes);
 
   return (
-    <div className="card card-full" style={{ position: "relative" }}>
+    <div className="card card-full detalle-card" style={{ position: "relative", display: "flex", flexDirection: "column" }}>
       <h3>Detalle del Contribuyente</h3>
 
-      <div className="detalle-grid">
-        <div><strong>Nombre:</strong> {contribuyente.fistName} {contribuyente.lastName}</div>
-        <div><strong>RNC:</strong> {contribuyente.rncCedula}</div>
-        <div><strong>Tipo:</strong> {contribuyente.tipoContribuyenteId === 1 ? "Persona Física" : "Persona Jurídica"}</div>
-        <div><strong>Estado:</strong> {contribuyente.status}</div>
-        <div><strong>Teléfono:</strong> {contribuyente.numberphone}</div>
-        <div><strong>Email:</strong> {contribuyente.email}</div>
+      {/* SECCIÓN DATOS - 30% altura máxima, 2 columnas */}
+      <div className="detalle-seccion-datos">
+        <div className="detalle-grid-2col">
+          <div><strong>Nombre:</strong> {contribuyente.fistName} {contribuyente.lastName}</div>
+          <div><strong>RNC:</strong> {contribuyente.rncCedula}</div>
+          <div><strong>Tipo:</strong> {contribuyente.tipoContribuyenteId === 1 ? "Persona Física" : "Persona Jurídica"}</div>
+          <div><strong>Estado:</strong> {contribuyente.status}</div>
+          <div><strong>Teléfono:</strong> {contribuyente.numberphone}</div>
+          <div><strong>Email:</strong> {contribuyente.email}</div>
+        </div>
         <div style={{ gridColumn: "1/-1" }}>
           <strong>Dirección:</strong> {contribuyente.address}
         </div>
       </div>
 
-      {/* Lista de comprobantes */}
-      <h4 style={{ marginTop: "1.5rem" }}>Comprobantes</h4>
-      <div
-        id="listaComprobantes"
-        ref={listaRef}
-        className="contribuyentes-lista listaComprobantes"
-        style={{ maxHeight: "300px", overflowY: "auto" }}
-      >
-        {comprobantes.length === 0 && <p>No hay comprobantes para este contribuyente.</p>}
-        {comprobantes.map(c => (
-          <div
-            key={c.id}
-            className="card contribuyente-item"
-            style={{ cursor: "pointer" }}
-            onClick={() => onVerComprobante && onVerComprobante(c)}
-          >
-            <div>
-              <h4>{c.ncf}</h4>
-              <p><strong>Fecha emisión:</strong> {new Date(c.fechaEmision).toLocaleDateString()}</p>
-              <p><strong>Descripción:</strong> {c.descripcion}</p>
+      {/* SECCIÓN COMPROBANTES - Ocupa espacio restante */}
+      <div className="detalle-seccion-comprobantes">
+        <h4>Comprobantes</h4>
+        <div
+          id="listaComprobantes"
+          ref={listaRef}
+          className="listaComprobantes-detalle"
+        >
+          {isLoading ? (
+            <div className="detalle-loading">
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
-            <div>
-              <p><strong>Monto:</strong> ${c.monto.toLocaleString()}</p>
-              <p><strong>ITBIS 18%:</strong> ${c.itbis18.toLocaleString()}</p>
-            </div>
-          </div>
-        ))}
+          ) : comprobantes.length === 0 ? (
+            <p>No hay comprobantes para este contribuyente.</p>
+          ) : (
+            comprobantes.map((c, index) => (
+              <div
+                key={`${pageComprobantes}-${c.id}`}
+                className="card contribuyente-item"
+                style={{ cursor: "pointer" }}
+                onClick={() => onVerComprobante && onVerComprobante(c)}
+              >
+                <div>
+                  <h4>#{(pageComprobantes - 1) * pageSizeComprobantes + index + 1} - {c.ncf}</h4>
+                  <p><strong>Fecha emisión:</strong> {new Date(c.fechaEmision).toLocaleDateString()}</p>
+                  <p><strong>Descripción:</strong> {c.descripcion}</p>
+                </div>
+                <div>
+                  <p><strong>Monto:</strong> ${c.monto.toLocaleString()}</p>
+                  <p><strong>ITBIS 18%:</strong> ${c.itbis18.toLocaleString()}</p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
-      {/* Contenedor combinado acciones + paginación */}
-      <div
-        className="acciones"
-        style={{
-          marginTop: "1.5rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "1rem",
-        }}
-      >
-        {/* Info y paginación */}
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+      {/* SECCIÓN ACCIONES Y PAGINACIÓN - Fija en la parte inferior */}
+      <div className="detalle-seccion-acciones">
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flex: 1 }}>
           <span className="paginacion-info">
             Mostrando {desde} – {hasta} de {totalRecordsComprobantes}
           </span>

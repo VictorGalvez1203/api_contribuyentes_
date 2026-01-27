@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useToast } from "../../context/ToastContext";
 
 export default function UsuarioModal({ modo, data, roles = [], onClose, onSave }) {
+    const { showToast } = useToast();
     const [form, setForm] = useState({
         id: null,
         username: "",
@@ -41,12 +43,12 @@ export default function UsuarioModal({ modo, data, roles = [], onClose, onSave }
 
     function handleSave() {
         if (!form.username || !form.email || !form.rol_Id) {
-            alert("Username, Email y Rol son obligatorios");
+            showToast("error", "Username, Email y Rol son obligatorios");
             return;
         }
 
         if (modo === "nuevo" && !form.password) {
-            alert("La contraseña es obligatoria");
+            showToast("error", "La contraseña es obligatoria");
             return;
         }
 

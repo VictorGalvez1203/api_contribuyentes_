@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
 import { getUsuarioPorId, updateUsuario } from "../../api/usuariosApi";
 
 export default function Configuracion() {
   const { token, userId } = useAuth();
+  const { showToast } = useToast();
   const [form, setForm] = useState({
     id: null,
     username: "",
@@ -62,13 +64,13 @@ export default function Configuracion() {
 
       await updateUsuario(form.id, payload, token);
 
-      alert("Datos actualizados correctamente");
+      showToast("success", "Datos actualizados correctamente");
 
       // 🔁 RECARGA COMPLETA DEL DASHBOARD
       window.location.reload();
 
     } catch (error) {
-      alert("Error actualizando datos");
+      showToast("error", "Error actualizando datos");
       console.error(error);
     }
   }
