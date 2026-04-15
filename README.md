@@ -84,13 +84,64 @@ npm run dev
 
 ---
 
-## 📌 Endpoints principales
+## 📌 Endpoints de la API
+
+### 🔐 Autenticación
 
 ```http
-GET /api/contribuyentes/{rnc}
 POST /api/auth/login
 POST /api/auth/register
 ```
+
+---
+
+### 👤 Usuarios
+
+```http
+GET    /api/usuarios
+GET    /api/usuarios/{id}
+POST   /api/usuarios
+PUT    /api/usuarios/{id}
+DELETE /api/usuarios/{id}
+```
+
+---
+
+### 🛡️ Roles de Usuario
+
+```http
+GET    /api/roles_usuario
+POST   /api/roles_usuario
+```
+
+---
+
+### 🧾 Contribuyentes
+
+```http
+GET    /api/contribuyentes
+GET    /api/contribuyentes/{rnc}
+POST   /api/contribuyentes
+```
+
+---
+
+### 📄 Comprobantes Fiscales
+
+```http
+GET    /api/comprobantesfiscales
+POST   /api/comprobantesfiscales
+```
+
+---
+
+### 🏷️ Tipos de Contribuyente
+
+```http
+GET    /api/tiposcontribuyente
+POST   /api/tiposcontribuyente
+```
+
 
 ---
 
