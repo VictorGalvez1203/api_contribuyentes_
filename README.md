@@ -1,124 +1,130 @@
-# dgii_api_contribuyentes
+# 🧾 Sistema de Consulta de Contribuyentes DGII
 
--- Base
-CREATE DATABASE DBContribuyentesCF;
-GO
-USE DBContribuyentesCF;
-GO
+Aplicación completa (Full Stack) para la consulta de contribuyentes (RNC/Cédula) en República Dominicana, compuesta por una API en .NET y un frontend en React.
 
+---
 
--- Lookup: tipos de contribuyente
-CREATE TABLE tipos_contribuyente (
-    Id INT IDENTITY PRIMARY KEY, -- en vez de id_tipo
-    Tipo VARCHAR(50) NOT NULL UNIQUE,
-);
+## 🚀 Características principales
 
-INSERT INTO tipos_contribuyente (Tipo) 
-VALUES ('PERSONA FISICA'), ('PERSONA JURIDICA');
+* 🔍 Consulta de contribuyentes (RNC/Cédula)
+* 🔐 Autenticación con JWT
+* 🌐 API REST estructurada en capas
+* 💻 Interfaz web en React
+* 🗄️ Manejo de base de datos con SQL Server
 
--- Tabla contribuyentes
-CREATE TABLE contribuyentes (
-    Id INT IDENTITY PRIMARY KEY,
-    Name VARCHAR(100) NOT NULL,
-    Lastname VARCHAR(100) NULL,
-    RncCedula VARCHAR(20) NOT NULL UNIQUE,
-    Type VARCHAR(50) NOT NULL, -- Podría ser FK si lo deseas
-    Status VARCHAR(20) NOT NULL CHECK (Status IN ('activo','inactivo')),
-    Numberphone VARCHAR(30) NULL,
-    Email VARCHAR(150) NULL UNIQUE,
-    Address VARCHAR(250) NULL,
+---
 
-    -- Auditoría
-    CreatedBy VARCHAR(100) NULL,
-    Created DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
-    LastModifiedBy VARCHAR(100) NULL,
-    LasModified DATETIME2 NULL
-);
+## 🧱 Arquitectura del proyecto
 
--- Tabla comprobantes fiscales
-CREATE TABLE comprobantes_fiscales (
-    Id INT IDENTITY PRIMARY KEY,
-    ContribuyenteId INT NOT NULL REFERENCES contribuyentes(Id) ON DELETE CASCADE,
-    Ncf VARCHAR(13) NOT NULL UNIQUE,
-    FechaEmision DATE NOT NULL DEFAULT CAST(SYSUTCDATETIME() AS DATE),
-    Monto DECIMAL(12,2) NOT NULL CHECK (Monto >= 0),
-    Itbis18 AS ROUND(Monto * 0.18, 2) PERSISTED,
-    Descripcion VARCHAR(250) NULL,
+El backend está organizado siguiendo buenas prácticas de arquitectura en capas:
 
-    -- Auditoría
-    CreatedBy VARCHAR(100) NULL,
-    Created DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
-    LastModifiedBy VARCHAR(100) NULL,
-    LasModified DATETIME2 NULL
-);
+* **Application** → lógica de negocio
+* **Domain** → entidades del sistema
+* **Persistence** → acceso a datos
+* **Identity** → autenticación (JWT)
+* **WebApi** → endpoints de la API
 
--- Tabla roles_usuario
-CREATE TABLE roles_usuario (
-    Id INT IDENTITY PRIMARY KEY,
-    NombreRol VARCHAR(20) NOT NULL UNIQUE,
-);
+---
 
--- Tabla usuarios
-CREATE TABLE usuarios (
-    Id INT IDENTITY PRIMARY KEY,
-    Username VARCHAR(100) NOT NULL UNIQUE,
-    Password_Hash VARBINARY(256) NOT NULL,
-    Email VARCHAR(150) NULL UNIQUE,
-    RolId INT NOT NULL REFERENCES roles_usuario(Id),
-    Estado VARCHAR(10) NOT NULL DEFAULT 'activo' CHECK (Estado IN ('activo','inactivo')),
+## 🛠️ Tecnologías utilizadas
 
-    -- Auditoría
-    CreatedBy VARCHAR(100) NULL,
-    Created DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
-    LastModifiedBy VARCHAR(100) NULL,
-    LasModified DATETIME2 NULL
-);
+### Backend
 
+* C#
+* ASP.NET Core
+* SQL Server
+* JWT Authentication
 
--- Contribuyentes
-INSERT INTO contribuyentes (Name, Lastname, RncCedula, Type, Status, Numberphone, Email, Address, CreatedBy)
-VALUES
-('JUAN', 'PEREZ', '98754321012', 'PERSONA FISICA', 'activo', '809-555-1234', 'juan.perez@example.com', 'Calle Falsa 123', 'system'),
-('FARMACIA', 'TU SALUD', '000987456789', 'PERSONA JURIDICA', 'inactivo', '809-777-0000', 'contacto@farmacia.example', 'Av. Salud 45', 'system');
+### Frontend
 
--- Comprobantes
-INSERT INTO comprobantes_fiscales (ContribuyenteId, Ncf, Monto, Descripcion, CreatedBy)
-VALUES (
-    (SELECT Id FROM contribuyentes WHERE RncCedula = '98754321012'),
-    'E31000000001',
-    200.00,
-    'Comprobante ejemplo 1',
-    'system'
-);
+* React
+* Vite
+* JavaScript
 
-INSERT INTO comprobantes_fiscales (ContribuyenteId, Ncf, Monto, Descripcion, CreatedBy)
-VALUES (
-    (SELECT Id FROM contribuyentes WHERE RncCedula = '98754321012'),
-    'E31000000002',
-    1000.00,
-    'Comprobante ejemplo 2',
-    'system'
-);
+---
 
--- Roles
-INSERT INTO roles_usuario (NombreRol)
-VALUES ('BASICO'), ('ADMIN');
+## 📂 Estructura del proyecto
 
--- Usuarios
-INSERT INTO usuarios (Username, Password_Hash, Email, RolId, CreatedBy)
-VALUES (
-    'admin01',
-    HASHBYTES('SHA2_256', 'MiPasswordSeguro123'),
-    'admin@dgii.gob.do',
-    (SELECT Id FROM roles_usuario WHERE NombreRol = 'ADMIN'),
-    'system'
-);
+```
+api_contribuyentes_
+│
+├── dgii_api_contribuyentes/
+│   ├── Application/
+│   ├── Domain/
+│   ├── Persistence/
+│   ├── Identity/
+│   └── WebApi2/
+│
+├── frontend/react_frontend/
+│   ├── src/
+│   ├── public/
+│   └── package.json
+```
 
----------------------------------------------------
--- VERIFICAR RESULTADOS
----------------------------------------------------
-SELECT * FROM contribuyentes;
-SELECT * FROM comprobantes_fiscales;
-SELECT * FROM roles_usuario;
-SELECT * FROM usuarios;
+---
+
+## ⚙️ Instalación y ejecución
+
+### 🔹 Backend (.NET)
+
+```bash
+cd dgii_api_contribuyentes
+dotnet run
+```
+
+---
+
+### 🔹 Frontend (React)
+
+```bash
+cd frontend/react_frontend_1.2
+npm install
+npm run dev
+```
+
+---
+
+## 📌 Endpoints principales
+
+```http
+GET /api/contribuyentes/{rnc}
+POST /api/auth/login
+POST /api/auth/register
+```
+
+---
+
+## 🎯 Objetivo del proyecto
+
+Este proyecto fue desarrollado para:
+
+* ✔️ Practicar arquitectura en capas
+* ✔️ Implementar autenticación con JWT
+* ✔️ Integrar frontend y backend
+* ✔️ Aplicar buenas prácticas de desarrollo
+
+---
+
+## 📈 Posibles mejoras
+
+* 🚀 Despliegue en la nube (Azure / Render)
+* 📄 Documentación con Swagger
+* 🔐 Mejoras en seguridad
+* 🧪 Pruebas unitarias
+
+---
+
+## 👨‍💻 Autor
+
+**Víctor Eulogio Galvez Faña**
+
+📍 Santo Domingo, República Dominicana
+📧 [galvezfanavictor@gmail.com](mailto:galvezfanavictor@gmail.com)
+🔗 LinkedIn: https://www.linkedin.com/in/victor-eulogio-galvez-faña-b61b6229a
+
+---
+
+## ⭐ Nota
+
+Proyecto desarrollado con fines educativos.
 
